@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the WPC Product Timer for WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: WPC Product Timer for WooCommerce 5.2.0\n"
+"Project-Id-Version: WPC Product Timer for WooCommerce 5.2.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woo-product-timer\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-09-09T17:18:58+00:00\n"
+"POT-Creation-Date: 2024-09-27T11:40:07+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.5.0\n"
 "X-Domain: woo-product-timer\n"
@@ -34,508 +34,508 @@ msgstr ""
 msgid "https://wpclever.net"
 msgstr ""
 
-#: wpc-product-timer.php:1315
-#: wpc-product-timer.php:1338
-#: wpc-product-timer.php:1527
+#: wpc-product-timer.php:1318
+#: wpc-product-timer.php:1341
+#: wpc-product-timer.php:1530
 msgid "WPC Product Timer"
 msgstr ""
 
-#: wpc-product-timer.php:1315
+#: wpc-product-timer.php:1318
 msgid "Product Timer"
 msgstr ""
 
-#: wpc-product-timer.php:1323
+#: wpc-product-timer.php:1326
 msgid "WPC Global Timer"
 msgstr ""
 
-#: wpc-product-timer.php:1338
-#: wpc-product-timer.php:1527
+#: wpc-product-timer.php:1341
+#: wpc-product-timer.php:1530
 msgid "Premium"
 msgstr ""
 
 #. translators: stars
-#: wpc-product-timer.php:1341
-#: wpc-product-timer.php:1530
+#: wpc-product-timer.php:1344
+#: wpc-product-timer.php:1533
 msgid "Thank you for using our plugin! If you are satisfied, please reward it a full five-star %s rating."
 msgstr ""
 
-#: wpc-product-timer.php:1343
-#: wpc-product-timer.php:1532
+#: wpc-product-timer.php:1346
+#: wpc-product-timer.php:1535
 msgid "Reviews"
 msgstr ""
 
-#: wpc-product-timer.php:1344
-#: wpc-product-timer.php:1533
+#: wpc-product-timer.php:1347
+#: wpc-product-timer.php:1536
 msgid "Changelog"
 msgstr ""
 
-#: wpc-product-timer.php:1345
-#: wpc-product-timer.php:1534
+#: wpc-product-timer.php:1348
+#: wpc-product-timer.php:1537
 msgid "Discussion"
 msgstr ""
 
-#: wpc-product-timer.php:1350
+#: wpc-product-timer.php:1353
 msgid "Settings updated."
 msgstr ""
 
-#: wpc-product-timer.php:1356
-#: wpc-product-timer.php:1633
+#: wpc-product-timer.php:1359
+#: wpc-product-timer.php:1636
 msgid "How to use?"
 msgstr ""
 
-#: wpc-product-timer.php:1359
-#: wpc-product-timer.php:1540
-#: wpc-product-timer.php:1634
+#: wpc-product-timer.php:1362
+#: wpc-product-timer.php:1543
+#: wpc-product-timer.php:1637
 msgid "Global Timer"
 msgstr ""
 
-#: wpc-product-timer.php:1361
-#: wpc-product-timer.php:1542
-#: wpc-product-timer.php:1651
+#: wpc-product-timer.php:1364
+#: wpc-product-timer.php:1545
+#: wpc-product-timer.php:1654
 msgid "Docs"
 msgstr ""
 
-#: wpc-product-timer.php:1364
-#: wpc-product-timer.php:1635
+#: wpc-product-timer.php:1367
+#: wpc-product-timer.php:1638
 msgid "Premium Version"
 msgstr ""
 
-#: wpc-product-timer.php:1367
+#: wpc-product-timer.php:1370
 msgid "Essential Kit"
 msgstr ""
 
-#: wpc-product-timer.php:1375
+#: wpc-product-timer.php:1378
 msgid "1. Global timer: Switch to Global Timer tab to set the timer for all products, categories or tags."
 msgstr ""
 
-#: wpc-product-timer.php:1378
+#: wpc-product-timer.php:1381
 msgid "2. Product basis timer: When adding/editing the product you can choose the Timer tab then add action & time conditional."
 msgstr ""
 
-#: wpc-product-timer.php:1389
+#: wpc-product-timer.php:1392
 msgid "Performance"
 msgstr ""
 
-#: wpc-product-timer.php:1396
+#: wpc-product-timer.php:1399
 msgid "Stock (in stock, out of stock)"
 msgstr ""
 
-#: wpc-product-timer.php:1402
+#: wpc-product-timer.php:1405
 msgid "Visibility (visible, hidden, catalog visibility)"
 msgstr ""
 
-#: wpc-product-timer.php:1408
+#: wpc-product-timer.php:1411
 msgid "Featured (featured, unfeatured)"
 msgstr ""
 
-#: wpc-product-timer.php:1414
+#: wpc-product-timer.php:1417
 msgid "Purchasable (purchasable, unpurchasable)"
 msgstr ""
 
-#: wpc-product-timer.php:1420
+#: wpc-product-timer.php:1423
 msgid "Price (regular price, sale price)"
 msgstr ""
 
-#: wpc-product-timer.php:1426
+#: wpc-product-timer.php:1429
 msgid "On Sale (enable, disable)"
 msgstr ""
 
-#: wpc-product-timer.php:1432
+#: wpc-product-timer.php:1435
 msgid "Sold Individually (enable, disable)"
 msgstr ""
 
-#: wpc-product-timer.php:1436
+#: wpc-product-timer.php:1439
 msgid "Uncheck the feature(s) you don't use in all timers for better performance."
 msgstr ""
 
-#: wpc-product-timer.php:1441
-#: wpc-product-timer.php:1551
-#: wpc-product-timer.php:1716
+#: wpc-product-timer.php:1444
+#: wpc-product-timer.php:1554
+#: wpc-product-timer.php:1719
 msgid "Current time"
 msgstr ""
 
-#: wpc-product-timer.php:1447
-#: wpc-product-timer.php:1557
-#: wpc-product-timer.php:1720
+#: wpc-product-timer.php:1450
+#: wpc-product-timer.php:1560
+#: wpc-product-timer.php:1723
 msgid "Week No."
 msgstr ""
 
-#: wpc-product-timer.php:1448
-#: wpc-product-timer.php:1558
-#: wpc-product-timer.php:1721
+#: wpc-product-timer.php:1451
+#: wpc-product-timer.php:1561
+#: wpc-product-timer.php:1724
 msgid "Date/time settings"
 msgstr ""
 
-#: wpc-product-timer.php:1453
-#: wpc-product-timer.php:1563
+#: wpc-product-timer.php:1456
+#: wpc-product-timer.php:1566
 msgid "Actions"
 msgstr ""
 
-#: wpc-product-timer.php:1470
-#: wpc-product-timer.php:1580
-#: wpc-product-timer.php:1737
+#: wpc-product-timer.php:1473
+#: wpc-product-timer.php:1583
+#: wpc-product-timer.php:1740
 msgid "+ Add action"
 msgstr ""
 
-#: wpc-product-timer.php:1472
-#: wpc-product-timer.php:1582
-#: wpc-product-timer.php:1739
+#: wpc-product-timer.php:1475
+#: wpc-product-timer.php:1585
+#: wpc-product-timer.php:1742
 msgid "Expand All"
 msgstr ""
 
-#: wpc-product-timer.php:1474
-#: wpc-product-timer.php:1584
-#: wpc-product-timer.php:1741
+#: wpc-product-timer.php:1477
+#: wpc-product-timer.php:1587
+#: wpc-product-timer.php:1744
 msgid "Collapse All"
 msgstr ""
 
-#: wpc-product-timer.php:1652
+#: wpc-product-timer.php:1655
 msgid "Community support"
 msgstr ""
 
-#: wpc-product-timer.php:1663
-#: wpc-product-timer.php:2241
-#: wpc-product-timer.php:2382
-#: wpc-product-timer.php:2398
+#: wpc-product-timer.php:1666
+#: wpc-product-timer.php:2244
+#: wpc-product-timer.php:2385
+#: wpc-product-timer.php:2401
 msgid "Timer"
 msgstr ""
 
-#: wpc-product-timer.php:1686
+#: wpc-product-timer.php:1689
 msgid "Product wasn't returned."
 msgstr ""
 
-#: wpc-product-timer.php:1712
+#: wpc-product-timer.php:1715
 msgid "Click here to configure the Global Timer"
 msgstr ""
 
-#: wpc-product-timer.php:1746
+#: wpc-product-timer.php:1749
 msgid "Save actions"
 msgstr ""
 
-#: wpc-product-timer.php:1776
+#: wpc-product-timer.php:1779
 msgid "duplicate"
 msgstr ""
 
-#: wpc-product-timer.php:1778
+#: wpc-product-timer.php:1781
 msgid "remove"
 msgstr ""
 
-#: wpc-product-timer.php:1782
+#: wpc-product-timer.php:1785
 msgid "Name"
 msgstr ""
 
-#: wpc-product-timer.php:1784
+#: wpc-product-timer.php:1787
 msgid "For management use only."
 msgstr ""
 
-#: wpc-product-timer.php:1791
+#: wpc-product-timer.php:1794
 msgid "Apply for"
 msgstr ""
 
-#: wpc-product-timer.php:1794
+#: wpc-product-timer.php:1797
 msgid "All products"
 msgstr ""
 
-#: wpc-product-timer.php:1795
-#: wpc-product-timer.php:2000
+#: wpc-product-timer.php:1798
+#: wpc-product-timer.php:2003
 msgid "Variations only"
 msgstr ""
 
-#: wpc-product-timer.php:1796
-#: wpc-product-timer.php:2001
+#: wpc-product-timer.php:1799
+#: wpc-product-timer.php:2004
 msgid "Non-variation products"
 msgstr ""
 
-#: wpc-product-timer.php:1797
-#: wpc-product-timer.php:1811
+#: wpc-product-timer.php:1800
+#: wpc-product-timer.php:1814
 msgid "Products"
 msgstr ""
 
-#: wpc-product-timer.php:1798
+#: wpc-product-timer.php:1801
 msgid "Combined sources"
 msgstr ""
 
-#: wpc-product-timer.php:1813
+#: wpc-product-timer.php:1816
 msgid "Search for a product&hellip;"
 msgstr ""
 
-#: wpc-product-timer.php:1833
+#: wpc-product-timer.php:1836
 msgid "Applied conditions"
 msgstr ""
 
-#: wpc-product-timer.php:1836
+#: wpc-product-timer.php:1839
 msgid "* Configure to find products that match all listed conditions."
 msgstr ""
 
-#: wpc-product-timer.php:1848
+#: wpc-product-timer.php:1851
 msgid "+ Add condition"
 msgstr ""
 
-#: wpc-product-timer.php:1853
+#: wpc-product-timer.php:1856
 msgid "Terms"
 msgstr ""
 
-#: wpc-product-timer.php:1883
+#: wpc-product-timer.php:1886
 msgid "Action"
 msgstr ""
 
-#: wpc-product-timer.php:1887
+#: wpc-product-timer.php:1890
 msgid "Choose action"
 msgstr ""
 
-#: wpc-product-timer.php:1888
+#: wpc-product-timer.php:1891
 msgid "Set in stock"
 msgstr ""
 
-#: wpc-product-timer.php:1889
+#: wpc-product-timer.php:1892
 msgid "Set out of stock"
 msgstr ""
 
-#: wpc-product-timer.php:1890
+#: wpc-product-timer.php:1893
 msgid "Set visible"
 msgstr ""
 
-#: wpc-product-timer.php:1891
+#: wpc-product-timer.php:1894
 msgid "Set hidden"
 msgstr ""
 
-#: wpc-product-timer.php:1892
+#: wpc-product-timer.php:1895
 msgid "Set catalog visibility"
 msgstr ""
 
-#: wpc-product-timer.php:1893
+#: wpc-product-timer.php:1896
 msgid "Set featured"
 msgstr ""
 
-#: wpc-product-timer.php:1894
+#: wpc-product-timer.php:1897
 msgid "Set unfeatured"
 msgstr ""
 
-#: wpc-product-timer.php:1895
+#: wpc-product-timer.php:1898
 msgid "Set purchasable"
 msgstr ""
 
-#: wpc-product-timer.php:1896
+#: wpc-product-timer.php:1899
 msgid "Set unpurchasable"
 msgstr ""
 
-#: wpc-product-timer.php:1897
+#: wpc-product-timer.php:1900
 msgid "Set regular price"
 msgstr ""
 
-#: wpc-product-timer.php:1898
+#: wpc-product-timer.php:1901
 msgid "Set sale price"
 msgstr ""
 
-#: wpc-product-timer.php:1899
+#: wpc-product-timer.php:1902
 msgid "Enable on-sale"
 msgstr ""
 
-#: wpc-product-timer.php:1900
+#: wpc-product-timer.php:1903
 msgid "Disable on-sale"
 msgstr ""
 
-#: wpc-product-timer.php:1901
+#: wpc-product-timer.php:1904
 msgid "Enable sold individually"
 msgstr ""
 
-#: wpc-product-timer.php:1902
+#: wpc-product-timer.php:1905
 msgid "Disable sold individually"
 msgstr ""
 
-#: wpc-product-timer.php:1910
+#: wpc-product-timer.php:1913
 msgid "% of sale price"
 msgstr ""
 
-#: wpc-product-timer.php:1911
+#: wpc-product-timer.php:1914
 msgid "% of regular price"
 msgstr ""
 
-#: wpc-product-timer.php:1911
+#: wpc-product-timer.php:1914
 msgid "%"
 msgstr ""
 
-#: wpc-product-timer.php:1916
+#: wpc-product-timer.php:1919
 msgid "Shop and search results"
 msgstr ""
 
-#: wpc-product-timer.php:1917
+#: wpc-product-timer.php:1920
 msgid "Shop only"
 msgstr ""
 
-#: wpc-product-timer.php:1918
+#: wpc-product-timer.php:1921
 msgid "Search results only"
 msgstr ""
 
-#: wpc-product-timer.php:1919
+#: wpc-product-timer.php:1922
 msgid "Hidden"
 msgstr ""
 
-#: wpc-product-timer.php:1925
+#: wpc-product-timer.php:1928
 msgid "Time conditions"
 msgstr ""
 
-#: wpc-product-timer.php:1928
+#: wpc-product-timer.php:1931
 msgid "* Configure date and time of the action that must match all listed conditions."
 msgstr ""
 
-#: wpc-product-timer.php:1940
+#: wpc-product-timer.php:1943
 msgid "+ Add time"
 msgstr ""
 
-#: wpc-product-timer.php:1945
+#: wpc-product-timer.php:1948
 msgid "User roles"
 msgstr ""
 
-#: wpc-product-timer.php:1948
+#: wpc-product-timer.php:1951
 msgid "* Configure user role(s) that apply the action."
 msgstr ""
 
-#: wpc-product-timer.php:1965
+#: wpc-product-timer.php:1968
 msgid "All"
 msgstr ""
 
-#: wpc-product-timer.php:1966
+#: wpc-product-timer.php:1969
 msgid "User (logged in)"
 msgstr ""
 
-#: wpc-product-timer.php:1967
+#: wpc-product-timer.php:1970
 msgid "Guest (not logged in)"
 msgstr ""
 
-#: wpc-product-timer.php:2089
+#: wpc-product-timer.php:2092
 msgid "Choose the time"
 msgstr ""
 
-#: wpc-product-timer.php:2090
+#: wpc-product-timer.php:2093
 msgid "On the date"
 msgstr ""
 
-#: wpc-product-timer.php:2091
+#: wpc-product-timer.php:2094
 msgid "Before date & time"
 msgstr ""
 
-#: wpc-product-timer.php:2092
+#: wpc-product-timer.php:2095
 msgid "After date & time"
 msgstr ""
 
-#: wpc-product-timer.php:2093
+#: wpc-product-timer.php:2096
 msgid "Before date"
 msgstr ""
 
-#: wpc-product-timer.php:2094
+#: wpc-product-timer.php:2097
 msgid "After date"
 msgstr ""
 
-#: wpc-product-timer.php:2095
+#: wpc-product-timer.php:2098
 msgid "Multiple dates"
 msgstr ""
 
-#: wpc-product-timer.php:2096
+#: wpc-product-timer.php:2099
 msgid "Date range"
 msgstr ""
 
-#: wpc-product-timer.php:2097
+#: wpc-product-timer.php:2100
 msgid "All even dates"
 msgstr ""
 
-#: wpc-product-timer.php:2098
+#: wpc-product-timer.php:2101
 msgid "All odd dates"
 msgstr ""
 
-#: wpc-product-timer.php:2099
+#: wpc-product-timer.php:2102
 msgid "Daily time range"
 msgstr ""
 
-#: wpc-product-timer.php:2100
+#: wpc-product-timer.php:2103
 msgid "Daily before time"
 msgstr ""
 
-#: wpc-product-timer.php:2101
+#: wpc-product-timer.php:2104
 msgid "Daily after time"
 msgstr ""
 
-#: wpc-product-timer.php:2102
+#: wpc-product-timer.php:2105
 msgid "Weekly on every"
 msgstr ""
 
-#: wpc-product-timer.php:2103
+#: wpc-product-timer.php:2106
 msgid "All even weeks"
 msgstr ""
 
-#: wpc-product-timer.php:2104
+#: wpc-product-timer.php:2107
 msgid "All odd weeks"
 msgstr ""
 
-#: wpc-product-timer.php:2105
+#: wpc-product-timer.php:2108
 msgid "On week No."
 msgstr ""
 
-#: wpc-product-timer.php:2106
+#: wpc-product-timer.php:2109
 msgid "Monthly on the"
 msgstr ""
 
-#: wpc-product-timer.php:2107
+#: wpc-product-timer.php:2110
 msgid "On month No."
 msgstr ""
 
-#: wpc-product-timer.php:2108
+#: wpc-product-timer.php:2111
 msgid "Days of being published are smaller than"
 msgstr ""
 
-#: wpc-product-timer.php:2109
+#: wpc-product-timer.php:2112
 msgid "Days of being published are bigger than"
 msgstr ""
 
-#: wpc-product-timer.php:2110
+#: wpc-product-timer.php:2113
 msgid "Everyday"
 msgstr ""
 
-#: wpc-product-timer.php:2127
+#: wpc-product-timer.php:2130
 msgid "Monday"
 msgstr ""
 
-#: wpc-product-timer.php:2128
+#: wpc-product-timer.php:2131
 msgid "Tuesday"
 msgstr ""
 
-#: wpc-product-timer.php:2129
+#: wpc-product-timer.php:2132
 msgid "Wednesday"
 msgstr ""
 
-#: wpc-product-timer.php:2130
+#: wpc-product-timer.php:2133
 msgid "Thursday"
 msgstr ""
 
-#: wpc-product-timer.php:2131
+#: wpc-product-timer.php:2134
 msgid "Friday"
 msgstr ""
 
-#: wpc-product-timer.php:2132
+#: wpc-product-timer.php:2135
 msgid "Saturday"
 msgstr ""
 
-#: wpc-product-timer.php:2133
+#: wpc-product-timer.php:2136
 msgid "Sunday"
 msgstr ""
 
-#: wpc-product-timer.php:2316
-#: wpc-product-timer.php:2355
+#: wpc-product-timer.php:2319
+#: wpc-product-timer.php:2358
 msgid "Update"
 msgstr ""
 
-#: wpc-product-timer.php:2333
+#: wpc-product-timer.php:2336
 msgid "Timer was removed!"
 msgstr ""
 
-#: wpc-product-timer.php:2339
+#: wpc-product-timer.php:2342
 msgid "Updated successfully!"
 msgstr ""
 
-#: wpc-product-timer.php:2341
+#: wpc-product-timer.php:2344
 msgid "Have an error!"
 msgstr ""
 
-#: wpc-product-timer.php:2356
+#: wpc-product-timer.php:2359
 msgid "* All current Actions will be replaced after pressing Update!"
 msgstr ""

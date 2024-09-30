@@ -3,7 +3,7 @@
 Plugin Name: WPC Product Timer for WooCommerce
 Plugin URI: https://wpclever.net/
 Description: WPC Product Timer helps you add many actions for the product based on the conditionals of the time.
-Version: 5.2.0
+Version: 5.2.1
 Author: WPClever
 Author URI: https://wpclever.net
 Text Domain: woo-product-timer
@@ -12,12 +12,12 @@ Requires Plugins: woocommerce
 Requires at least: 4.0
 Tested up to: 6.6
 WC requires at least: 3.0
-WC tested up to: 9.2
+WC tested up to: 9.3
 */
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'WOOPT_VERSION' ) && define( 'WOOPT_VERSION', '5.2.0' );
+! defined( 'WOOPT_VERSION' ) && define( 'WOOPT_VERSION', '5.2.1' );
 ! defined( 'WOOPT_LITE' ) && define( 'WOOPT_LITE', __FILE__ );
 ! defined( 'WOOPT_FILE' ) && define( 'WOOPT_FILE', __FILE__ );
 ! defined( 'WOOPT_URI' ) && define( 'WOOPT_URI', plugin_dir_url( __FILE__ ) );
@@ -656,37 +656,40 @@ if ( ! function_exists( 'woopt_init' ) ) {
 						}
 					}
 
-					return $check;
+					return apply_filters( 'woopt_check_timer', $check, $timer, $product_id );
 				}
 
 				public static function woopt_check_roles( $roles ) {
+					$check = false;
+
 					if ( is_string( $roles ) ) {
 						$roles = explode( ',', $roles );
 					}
 
 					if ( empty( $roles ) || in_array( 'woopt_all', (array) $roles ) || in_array( 'all', (array) $roles ) ) {
-						return true;
+						$check = true;
 					}
 
 					if ( is_user_logged_in() ) {
 						if ( in_array( 'woopt_user', (array) $roles ) ) {
-							return true;
+							$check = true;
 						}
 
 						$current_user = wp_get_current_user();
 
 						foreach ( $current_user->roles as $role ) {
 							if ( in_array( $role, (array) $roles ) ) {
-								return true;
+								$check = true;
+								break;
 							}
 						}
 					} else {
 						if ( in_array( 'woopt_guest', (array) $roles ) || in_array( 'guest', (array) $roles ) ) {
-							return true;
+							$check = true;
 						}
 					}
 
-					return false;
+					return apply_filters( 'woopt_check_roles', $check, $roles );
 				}
 
 				public static function woopt_get_action_result( $result, $product, $action_true = '', $action_false = '' ) {
@@ -780,7 +783,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
 						}
 					}
 
-					return $result;
+					return apply_filters( 'woopt_get_action_result', $result, $product, $action_true, $action_false );
 				}
 
 				public static function woopt_get_product_actions( $product, $context = 'active' ) {
@@ -851,7 +854,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
 						}
 					}
 
-					return $product_actions;
+					return apply_filters( 'woopt_get_product_actions', $product_actions, $product, $context );
 				}
 
 				public static function woopt_post_class( $classes, $product ) {
