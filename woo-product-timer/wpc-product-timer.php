@@ -3,21 +3,23 @@
 Plugin Name: WPC Product Timer for WooCommerce
 Plugin URI: https://wpclever.net/
 Description: WPC Product Timer helps you add many actions for the product based on the conditionals of the time.
-Version: 5.2.1
+Version: 5.2.2
 Author: WPClever
 Author URI: https://wpclever.net
 Text Domain: woo-product-timer
 Domain Path: /languages/
 Requires Plugins: woocommerce
 Requires at least: 4.0
-Tested up to: 6.6
+Tested up to: 6.7
 WC requires at least: 3.0
-WC tested up to: 9.3
+WC tested up to: 9.4
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'WOOPT_VERSION' ) && define( 'WOOPT_VERSION', '5.2.1' );
+! defined( 'WOOPT_VERSION' ) && define( 'WOOPT_VERSION', '5.2.2' );
 ! defined( 'WOOPT_LITE' ) && define( 'WOOPT_LITE', __FILE__ );
 ! defined( 'WOOPT_FILE' ) && define( 'WOOPT_FILE', __FILE__ );
 ! defined( 'WOOPT_URI' ) && define( 'WOOPT_URI', plugin_dir_url( __FILE__ ) );
@@ -37,9 +39,6 @@ if ( ! function_exists( 'woopt_init' ) ) {
 	add_action( 'plugins_loaded', 'woopt_init', 11 );
 
 	function woopt_init() {
-		// load text-domain
-		load_plugin_textdomain( 'woo-product-timer', false, basename( __DIR__ ) . '/languages/' );
-
 		if ( ! function_exists( 'WC' ) || ! version_compare( WC()->version, '3.0', '>=' ) ) {
 			add_action( 'admin_notices', 'woopt_notice_wc' );
 
@@ -1305,6 +1304,9 @@ if ( ! function_exists( 'woopt_init' ) ) {
 				}
 
 				function init() {
+					// load text-domain
+					load_plugin_textdomain( 'woo-product-timer', false, basename( WOOPT_DIR ) . '/languages/' );
+
 					self::$capabilities = apply_filters( 'woopt_global_timer_capabilities', self::$capabilities );
 				}
 
@@ -1813,7 +1815,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                 <div class="woopt_tr hide_apply show_if_apply_product">
                                     <div class="woopt_th"><?php esc_html_e( 'Products', 'woo-product-timer' ); ?></div>
                                     <div class="woopt_td woopt_action_td">
-                                        <select class="wc-product-search woopt-product-search" multiple="multiple" name="woopt_actions[<?php echo esc_attr( $key ); ?>][apply_val][products][]" data-placeholder="<?php esc_attr_e( 'Search for a product&hellip;', 'woo-product-timer' ); ?>" data-action="woocommerce_json_search_products_and_variations" data-val="<?php echo esc_attr( $apply === 'apply_product' ? $apply_val : '' ); ?>">
+                                        <select class="wc-product-search woopt-product-search" multiple="multiple" name="woopt_actions[<?php echo esc_attr( $key ); ?>][apply_val][products][]" data-placeholder="<?php esc_attr_e( 'Search for a product&hellip;', 'woo-product-timer' ); ?>" data-action="woocommerce_json_search_products_and_variations" data-val="<?php echo esc_attr( $apply === 'apply_product' ? ( is_array( $apply_val ) ? implode( ',', ( $apply_val['products'] ?? [] ) ) : $apply_val ) : '' ); ?>">
 											<?php
 											if ( is_string( $apply_val ) ) {
 												$product_ids = explode( ',', $apply_val );
