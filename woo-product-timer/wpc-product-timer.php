@@ -3,7 +3,7 @@
 Plugin Name: WPC Product Timer for WooCommerce
 Plugin URI: https://wpclever.net/
 Description: WPC Product Timer helps you add many actions for the product based on the conditionals of the time.
-Version: 5.2.3
+Version: 5.2.4
 Author: WPClever
 Author URI: https://wpclever.net
 Text Domain: woo-product-timer
@@ -12,14 +12,14 @@ Requires Plugins: woocommerce
 Requires at least: 4.0
 Tested up to: 6.7
 WC requires at least: 3.0
-WC tested up to: 9.5
+WC tested up to: 9.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'WOOPT_VERSION' ) && define( 'WOOPT_VERSION', '5.2.3' );
+! defined( 'WOOPT_VERSION' ) && define( 'WOOPT_VERSION', '5.2.4' );
 ! defined( 'WOOPT_LITE' ) && define( 'WOOPT_LITE', __FILE__ );
 ! defined( 'WOOPT_FILE' ) && define( 'WOOPT_FILE', __FILE__ );
 ! defined( 'WOOPT_URI' ) && define( 'WOOPT_URI', plugin_dir_url( __FILE__ ) );
@@ -1345,9 +1345,12 @@ if ( ! function_exists( 'woopt_init' ) ) {
                             <p>
 								<?php printf( /* translators: stars */ esc_html__( 'Thank you for using our plugin! If you are satisfied, please reward it a full five-star %s rating.', 'woo-product-timer' ), '<span style="color:#ffb900">&#9733;&#9733;&#9733;&#9733;&#9733;</span>' ); ?>
                                 <br/>
-                                <a href="<?php echo esc_url( WOOPT_REVIEWS ); ?>" target="_blank"><?php esc_html_e( 'Reviews', 'woo-product-timer' ); ?></a> |
-                                <a href="<?php echo esc_url( WOOPT_CHANGELOG ); ?>" target="_blank"><?php esc_html_e( 'Changelog', 'woo-product-timer' ); ?></a> |
-                                <a href="<?php echo esc_url( WOOPT_DISCUSSION ); ?>" target="_blank"><?php esc_html_e( 'Discussion', 'woo-product-timer' ); ?></a>
+                                <a href="<?php echo esc_url( WOOPT_REVIEWS ); ?>"
+                                   target="_blank"><?php esc_html_e( 'Reviews', 'woo-product-timer' ); ?></a> |
+                                <a href="<?php echo esc_url( WOOPT_CHANGELOG ); ?>"
+                                   target="_blank"><?php esc_html_e( 'Changelog', 'woo-product-timer' ); ?></a> |
+                                <a href="<?php echo esc_url( WOOPT_DISCUSSION ); ?>"
+                                   target="_blank"><?php esc_html_e( 'Discussion', 'woo-product-timer' ); ?></a>
                             </p>
                         </div>
 						<?php if ( isset( $_GET['settings-updated'] ) && $_GET['settings-updated'] ) { ?>
@@ -1357,18 +1360,23 @@ if ( ! function_exists( 'woopt_init' ) ) {
 						<?php } ?>
                         <div class="wpclever_settings_page_nav">
                             <h2 class="nav-tab-wrapper">
-                                <a href="<?php echo esc_url( admin_url( 'admin.php?page=wpclever-woopt&tab=how' ) ); ?>" class="<?php echo esc_attr( $active_tab === 'how' ? 'nav-tab nav-tab-active' : 'nav-tab' ); ?>">
+                                <a href="<?php echo esc_url( admin_url( 'admin.php?page=wpclever-woopt&tab=how' ) ); ?>"
+                                   class="<?php echo esc_attr( $active_tab === 'how' ? 'nav-tab nav-tab-active' : 'nav-tab' ); ?>">
 									<?php esc_html_e( 'How to use?', 'woo-product-timer' ); ?>
                                 </a>
-                                <a href="<?php echo esc_url( admin_url( 'admin.php?page=wpclever-woopt&tab=global' ) ); ?>" class="<?php echo esc_attr( $active_tab === 'global' ? 'nav-tab nav-tab-active' : 'nav-tab' ); ?>">
+                                <a href="<?php echo esc_url( admin_url( 'admin.php?page=wpclever-woopt&tab=global' ) ); ?>"
+                                   class="<?php echo esc_attr( $active_tab === 'global' ? 'nav-tab nav-tab-active' : 'nav-tab' ); ?>">
 									<?php esc_html_e( 'Global Timer', 'woo-product-timer' ); ?>
                                 </a> <a href="<?php echo esc_url( WOOPT_DOCS ); ?>" class="nav-tab" target="_blank">
 									<?php esc_html_e( 'Docs', 'woo-product-timer' ); ?>
                                 </a>
-                                <a href="<?php echo esc_url( admin_url( 'admin.php?page=wpclever-woopt&tab=premium' ) ); ?>" class="<?php echo esc_attr( $active_tab === 'premium' ? 'nav-tab nav-tab-active' : 'nav-tab' ); ?>" style="color: #c9356e">
+                                <a href="<?php echo esc_url( admin_url( 'admin.php?page=wpclever-woopt&tab=premium' ) ); ?>"
+                                   class="<?php echo esc_attr( $active_tab === 'premium' ? 'nav-tab nav-tab-active' : 'nav-tab' ); ?>"
+                                   style="color: #c9356e">
 									<?php esc_html_e( 'Premium Version', 'woo-product-timer' ); ?>
                                 </a>
-                                <a href="<?php echo esc_url( admin_url( 'admin.php?page=wpclever-kit' ) ); ?>" class="nav-tab">
+                                <a href="<?php echo esc_url( admin_url( 'admin.php?page=wpclever-kit' ) ); ?>"
+                                   class="nav-tab">
 									<?php esc_html_e( 'Essential Kit', 'woo-product-timer' ); ?>
                                 </a>
                             </h2>
@@ -1397,43 +1405,50 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                                 <ul>
                                                     <li>
                                                         <label>
-                                                            <input type="checkbox" name="woopt_features[]" value="stock" <?php echo esc_attr( empty( self::$features ) || in_array( 'stock', self::$features ) ? 'checked' : '' ); ?>/>
+                                                            <input type="checkbox" name="woopt_features[]"
+                                                                   value="stock" <?php echo esc_attr( empty( self::$features ) || in_array( 'stock', self::$features ) ? 'checked' : '' ); ?>/>
 															<?php esc_html_e( 'Stock (in stock, out of stock)', 'woo-product-timer' ); ?>
                                                         </label>
                                                     </li>
                                                     <li>
                                                         <label>
-                                                            <input type="checkbox" name="woopt_features[]" value="visibility" <?php echo esc_attr( empty( self::$features ) || in_array( 'visibility', self::$features ) ? 'checked' : '' ); ?>/>
+                                                            <input type="checkbox" name="woopt_features[]"
+                                                                   value="visibility" <?php echo esc_attr( empty( self::$features ) || in_array( 'visibility', self::$features ) ? 'checked' : '' ); ?>/>
 															<?php esc_html_e( 'Visibility (visible, hidden, catalog visibility)', 'woo-product-timer' ); ?>
                                                         </label>
                                                     </li>
                                                     <li>
                                                         <label>
-                                                            <input type="checkbox" name="woopt_features[]" value="featured" <?php echo esc_attr( empty( self::$features ) || in_array( 'featured', self::$features ) ? 'checked' : '' ); ?>/>
+                                                            <input type="checkbox" name="woopt_features[]"
+                                                                   value="featured" <?php echo esc_attr( empty( self::$features ) || in_array( 'featured', self::$features ) ? 'checked' : '' ); ?>/>
 															<?php esc_html_e( 'Featured (featured, unfeatured)', 'woo-product-timer' ); ?>
                                                         </label>
                                                     </li>
                                                     <li>
                                                         <label>
-                                                            <input type="checkbox" name="woopt_features[]" value="purchasable" <?php echo esc_attr( empty( self::$features ) || in_array( 'purchasable', self::$features ) ? 'checked' : '' ); ?>/>
+                                                            <input type="checkbox" name="woopt_features[]"
+                                                                   value="purchasable" <?php echo esc_attr( empty( self::$features ) || in_array( 'purchasable', self::$features ) ? 'checked' : '' ); ?>/>
 															<?php esc_html_e( 'Purchasable (purchasable, unpurchasable)', 'woo-product-timer' ); ?>
                                                         </label>
                                                     </li>
                                                     <li>
                                                         <label>
-                                                            <input type="checkbox" name="woopt_features[]" value="price" <?php echo esc_attr( empty( self::$features ) || in_array( 'price', self::$features ) ? 'checked' : '' ); ?>/>
+                                                            <input type="checkbox" name="woopt_features[]"
+                                                                   value="price" <?php echo esc_attr( empty( self::$features ) || in_array( 'price', self::$features ) ? 'checked' : '' ); ?>/>
 															<?php esc_html_e( 'Price (regular price, sale price)', 'woo-product-timer' ); ?>
                                                         </label>
                                                     </li>
                                                     <li>
                                                         <label>
-                                                            <input type="checkbox" name="woopt_features[]" value="onsale" <?php echo esc_attr( empty( self::$features ) || in_array( 'onsale', self::$features ) ? 'checked' : '' ); ?>/>
+                                                            <input type="checkbox" name="woopt_features[]"
+                                                                   value="onsale" <?php echo esc_attr( empty( self::$features ) || in_array( 'onsale', self::$features ) ? 'checked' : '' ); ?>/>
 															<?php esc_html_e( 'On Sale (enable, disable)', 'woo-product-timer' ); ?>
                                                         </label>
                                                     </li>
                                                     <li>
                                                         <label>
-                                                            <input type="checkbox" name="woopt_features[]" value="individually" <?php echo esc_attr( empty( self::$features ) || in_array( 'individually', self::$features ) ? 'checked' : '' ); ?>/>
+                                                            <input type="checkbox" name="woopt_features[]"
+                                                                   value="individually" <?php echo esc_attr( empty( self::$features ) || in_array( 'individually', self::$features ) ? 'checked' : '' ); ?>/>
 															<?php esc_html_e( 'Sold Individually (enable, disable)', 'woo-product-timer' ); ?>
                                                         </label>
                                                     </li>
@@ -1450,7 +1465,8 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                                 <code><?php echo esc_html( current_time( 'm/d/Y' ) ); ?></code>
                                                 <code><?php echo esc_html( current_time( 'h:i a' ) ); ?></code>
                                                 <code><?php echo esc_html__( 'Week No.', 'woo-product-timer' ) . ' ' . current_time( 'W' ); ?></code>
-                                                <a href="<?php echo esc_url( admin_url( 'options-general.php' ) ); ?>" target="_blank"><?php esc_html_e( 'Date/time settings', 'woo-product-timer' ); ?></a>
+                                                <a href="<?php echo esc_url( admin_url( 'options-general.php' ) ); ?>"
+                                                   target="_blank"><?php esc_html_e( 'Date/time settings', 'woo-product-timer' ); ?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -1458,6 +1474,13 @@ if ( ! function_exists( 'woopt_init' ) ) {
 												<?php esc_html_e( 'Actions', 'woo-product-timer' ); ?>
                                             </th>
                                             <td>
+                                                <p class="description">
+                                                    Actions are checked from top to bottom. The last one that matches
+                                                    the current time will be selected to execute. So if you want to hide
+                                                    a product and only show it on Fridays, first set it to hide every
+                                                    day, then in the following action, set it to show weekly every
+                                                    Friday.
+                                                </p>
                                                 <div class="woopt_actions">
 													<?php
 													if ( is_array( self::$global_actions ) && ( count( self::$global_actions ) > 0 ) ) {
@@ -1471,7 +1494,9 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                                 </div>
                                                 <div class="woopt_add_action">
                                                     <div>
-                                                        <a href="https://wpclever.net/downloads/product-timer?utm_source=pro&utm_medium=woopt&utm_campaign=wporg" target="_blank" class="button" onclick="return confirm('This feature only available in Premium Version!\nBuy it now? Just $29')">
+                                                        <a href="https://wpclever.net/downloads/product-timer?utm_source=pro&utm_medium=woopt&utm_campaign=wporg"
+                                                           target="_blank" class="button"
+                                                           onclick="return confirm('This feature only available in Premium Version!\nBuy it now? Just $29')">
 															<?php esc_html_e( '+ Add action', 'woo-product-timer' ); ?>
                                                         </a> <a href="#" class="woopt_expand_all">
 															<?php esc_html_e( 'Expand All', 'woo-product-timer' ); ?>
@@ -1492,7 +1517,8 @@ if ( ! function_exists( 'woopt_init' ) ) {
 							<?php } elseif ( $active_tab === 'premium' ) { ?>
                                 <div class="wpclever_settings_page_content_text">
                                     <p>Get the Premium Version just $29!
-                                        <a href="https://wpclever.net/downloads/product-timer?utm_source=pro&utm_medium=woopt&utm_campaign=wporg" target="_blank">https://wpclever.net/downloads/product-timer</a>
+                                        <a href="https://wpclever.net/downloads/product-timer?utm_source=pro&utm_medium=woopt&utm_campaign=wporg"
+                                           target="_blank">https://wpclever.net/downloads/product-timer</a>
                                     </p>
                                     <p><strong>Extra features for Premium Version:</strong></p>
                                     <ul style="margin-bottom: 0">
@@ -1508,13 +1534,17 @@ if ( ! function_exists( 'woopt_init' ) ) {
                             </div>
                             <div class="wpclever_settings_page_suggestion_content">
                                 <div>
-                                    To display custom engaging real-time messages on any wished positions, please install
-                                    <a href="https://wordpress.org/plugins/wpc-smart-messages/" target="_blank">WPC Smart Messages</a> plugin. It's free!
+                                    To display custom engaging real-time messages on any wished positions, please
+                                    install
+                                    <a href="https://wordpress.org/plugins/wpc-smart-messages/" target="_blank">WPC
+                                        Smart Messages</a> plugin. It's free!
                                 </div>
                                 <div>
                                     Wanna save your precious time working on variations? Try our brand-new free plugin
-                                    <a href="https://wordpress.org/plugins/wpc-variation-bulk-editor/" target="_blank">WPC Variation Bulk Editor</a> and
-                                    <a href="https://wordpress.org/plugins/wpc-variation-duplicator/" target="_blank">WPC Variation Duplicator</a>.
+                                    <a href="https://wordpress.org/plugins/wpc-variation-bulk-editor/" target="_blank">WPC
+                                        Variation Bulk Editor</a> and
+                                    <a href="https://wordpress.org/plugins/wpc-variation-duplicator/" target="_blank">WPC
+                                        Variation Duplicator</a>.
                                 </div>
                             </div>
                         </div>
@@ -1534,14 +1564,18 @@ if ( ! function_exists( 'woopt_init' ) ) {
                             <p>
 								<?php printf( /* translators: stars */ esc_html__( 'Thank you for using our plugin! If you are satisfied, please reward it a full five-star %s rating.', 'woo-product-timer' ), '<span style="color:#ffb900">&#9733;&#9733;&#9733;&#9733;&#9733;</span>' ); ?>
                                 <br/>
-                                <a href="<?php echo esc_url( WOOPT_REVIEWS ); ?>" target="_blank"><?php esc_html_e( 'Reviews', 'woo-product-timer' ); ?></a> |
-                                <a href="<?php echo esc_url( WOOPT_CHANGELOG ); ?>" target="_blank"><?php esc_html_e( 'Changelog', 'woo-product-timer' ); ?></a> |
-                                <a href="<?php echo esc_url( WOOPT_DISCUSSION ); ?>" target="_blank"><?php esc_html_e( 'Discussion', 'woo-product-timer' ); ?></a>
+                                <a href="<?php echo esc_url( WOOPT_REVIEWS ); ?>"
+                                   target="_blank"><?php esc_html_e( 'Reviews', 'woo-product-timer' ); ?></a> |
+                                <a href="<?php echo esc_url( WOOPT_CHANGELOG ); ?>"
+                                   target="_blank"><?php esc_html_e( 'Changelog', 'woo-product-timer' ); ?></a> |
+                                <a href="<?php echo esc_url( WOOPT_DISCUSSION ); ?>"
+                                   target="_blank"><?php esc_html_e( 'Discussion', 'woo-product-timer' ); ?></a>
                             </p>
                         </div>
                         <div class="wpclever_settings_page_nav">
                             <h2 class="nav-tab-wrapper">
-                                <a href="<?php echo esc_url( admin_url( 'admin.php?page=wpclever-woopt-global' ) ); ?>" class="nav-tab nav-tab-active">
+                                <a href="<?php echo esc_url( admin_url( 'admin.php?page=wpclever-woopt-global' ) ); ?>"
+                                   class="nav-tab nav-tab-active">
 									<?php esc_html_e( 'Global Timer', 'woo-product-timer' ); ?>
                                 </a> <a href="<?php echo esc_url( WOOPT_DOCS ); ?>" class="nav-tab" target="_blank">
 									<?php esc_html_e( 'Docs', 'woo-product-timer' ); ?>
@@ -1560,7 +1594,8 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                             <code><?php echo esc_html( current_time( 'm/d/Y' ) ); ?></code>
                                             <code><?php echo esc_html( current_time( 'h:i a' ) ); ?></code>
                                             <code><?php echo esc_html__( 'Week No.', 'woo-product-timer' ) . ' ' . current_time( 'W' ); ?></code>
-                                            <a href="<?php echo esc_url( admin_url( 'options-general.php' ) ); ?>" target="_blank"><?php esc_html_e( 'Date/time settings', 'woo-product-timer' ); ?></a>
+                                            <a href="<?php echo esc_url( admin_url( 'options-general.php' ) ); ?>"
+                                               target="_blank"><?php esc_html_e( 'Date/time settings', 'woo-product-timer' ); ?></a>
                                         </td>
                                     </tr>
                                     <tr>
@@ -1581,7 +1616,9 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                             </div>
                                             <div class="woopt_add_action">
                                                 <div>
-                                                    <a href="https://wpclever.net/downloads/product-timer?utm_source=pro&utm_medium=woopt&utm_campaign=wporg" target="_blank" class="button" onclick="return confirm('This feature only available in Premium Version!\nBuy it now? Just $29')">
+                                                    <a href="https://wpclever.net/downloads/product-timer?utm_source=pro&utm_medium=woopt&utm_campaign=wporg"
+                                                       target="_blank" class="button"
+                                                       onclick="return confirm('This feature only available in Premium Version!\nBuy it now? Just $29')">
 														<?php esc_html_e( '+ Add action', 'woo-product-timer' ); ?>
                                                     </a> <a href="#" class="woopt_expand_all">
 														<?php esc_html_e( 'Expand All', 'woo-product-timer' ); ?>
@@ -1714,7 +1751,8 @@ if ( ! function_exists( 'woopt_init' ) ) {
                     <div id='woopt_settings' class='panel woocommerce_options_panel woopt_settings'>
 						<?php if ( ! empty( $global_timer ) ) { ?>
                             <div class="woopt_global_timer"><span class="dashicons dashicons-admin-site"></span>
-                                <a href="<?php echo esc_url( $global_timer ); ?>" target="_blank"><?php esc_html_e( 'Click here to configure the Global Timer', 'woo-product-timer' ); ?></a>
+                                <a href="<?php echo esc_url( $global_timer ); ?>"
+                                   target="_blank"><?php esc_html_e( 'Click here to configure the Global Timer', 'woo-product-timer' ); ?></a>
                             </div>
 						<?php } ?>
                         <div class="woopt_current_time">
@@ -1723,7 +1761,8 @@ if ( ! function_exists( 'woopt_init' ) ) {
                             <code><?php echo esc_html( current_time( 'm/d/Y' ) ); ?></code>
                             <code><?php echo esc_html( current_time( 'h:i a' ) ); ?></code>
                             <code><?php echo esc_html__( 'Week No.', 'woo-product-timer' ) . ' ' . current_time( 'W' ); ?></code>
-                            <a href="<?php echo esc_url( admin_url( 'options-general.php' ) ); ?>" target="_blank"><?php esc_html_e( 'Date/time settings', 'woo-product-timer' ); ?></a>
+                            <a href="<?php echo esc_url( admin_url( 'options-general.php' ) ); ?>"
+                               target="_blank"><?php esc_html_e( 'Date/time settings', 'woo-product-timer' ); ?></a>
                         </div>
                         <div class="woopt_actions">
 							<?php
@@ -1738,7 +1777,9 @@ if ( ! function_exists( 'woopt_init' ) ) {
                         </div>
                         <div class="woopt_add_action">
                             <div>
-                                <a href="https://wpclever.net/downloads/product-timer?utm_source=pro&utm_medium=woopt&utm_campaign=wporg" target="_blank" class="button" onclick="return confirm('This feature only available in Premium Version!\nBuy it now? Just $29')">
+                                <a href="https://wpclever.net/downloads/product-timer?utm_source=pro&utm_medium=woopt&utm_campaign=wporg"
+                                   target="_blank" class="button"
+                                   onclick="return confirm('This feature only available in Premium Version!\nBuy it now? Just $29')">
 									<?php esc_html_e( '+ Add action', 'woo-product-timer' ); ?>
                                 </a> <a href="#" class="woopt_expand_all">
 									<?php esc_html_e( 'Expand All', 'woo-product-timer' ); ?>
@@ -1773,29 +1814,41 @@ if ( ! function_exists( 'woopt_init' ) ) {
 					$conditional = $action_data['timer'];
 					$roles       = $action_data['roles'];
 					?>
-                    <div class="woopt_action <?php echo esc_attr( $active ? 'active' : '' ); ?>" data-key="<?php echo esc_attr( $key ); ?>">
+                    <div class="woopt_action <?php echo esc_attr( $active ? 'active' : '' ); ?>"
+                         data-key="<?php echo esc_attr( $key ); ?>">
                         <div class="woopt_action_heading">
                             <span class="woopt_action_move"></span>
-                            <span class="woopt_action_label"><span class="woopt_action_label_name"><?php echo esc_html( '#' . $key ); ?></span><span class="woopt_action_label_action"></span><span class="woopt_action_label_apply"></span></span>
-                            <a href="https://wpclever.net/downloads/product-timer?utm_source=pro&utm_medium=woopt&utm_campaign=wporg" target="_blank" class="woopt_action_duplicate" onclick="return confirm('This feature only available in Premium Version!\nBuy it now? Just $29')">
+                            <span class="woopt_action_label"><span
+                                        class="woopt_action_label_name"><?php echo esc_html( '#' . $key ); ?></span><span
+                                        class="woopt_action_label_action"></span><span
+                                        class="woopt_action_label_apply"></span></span>
+                            <a href="https://wpclever.net/downloads/product-timer?utm_source=pro&utm_medium=woopt&utm_campaign=wporg"
+                               target="_blank" class="woopt_action_duplicate"
+                               onclick="return confirm('This feature only available in Premium Version!\nBuy it now? Just $29')">
 								<?php esc_html_e( 'duplicate', 'woo-product-timer' ); ?>
                             </a>
-                            <a href="#" class="woopt_action_remove"><?php esc_html_e( 'remove', 'woo-product-timer' ); ?></a>
+                            <a href="#"
+                               class="woopt_action_remove"><?php esc_html_e( 'remove', 'woo-product-timer' ); ?></a>
                         </div>
                         <div class="woopt_action_content">
                             <div class="woopt_tr">
                                 <div class="woopt_th"><?php esc_html_e( 'Name', 'woo-product-timer' ); ?></div>
                                 <div class="woopt_td woopt_action_td">
                                     <p class="description"><?php esc_html_e( 'For management use only.', 'woo-product-timer' ); ?></p>
-                                    <input type="text" class="text large-text woopt_action_name_input" name="woopt_actions[<?php echo esc_attr( $key ); ?>][name]" data-name="<?php echo esc_attr( '#' . $key ); ?>" value="<?php echo esc_attr( $name ); ?>"/>
+                                    <input type="text" class="text large-text woopt_action_name_input"
+                                           name="woopt_actions[<?php echo esc_attr( $key ); ?>][name]"
+                                           data-name="<?php echo esc_attr( '#' . $key ); ?>"
+                                           value="<?php echo esc_attr( $name ); ?>"/>
                                 </div>
                             </div>
 							<?php if ( $global ) { ?>
-                                <input type="hidden" name="woopt_actions[<?php echo esc_attr( $key ); ?>][type]" value="global"/>
+                                <input type="hidden" name="woopt_actions[<?php echo esc_attr( $key ); ?>][type]"
+                                       value="global"/>
                                 <div class="woopt_tr">
                                     <div class="woopt_th"><?php esc_html_e( 'Apply for', 'woo-product-timer' ); ?></div>
                                     <div class="woopt_td woopt_action_td">
-                                        <select class="woopt_apply_selector" name="woopt_actions[<?php echo esc_attr( $key ); ?>][apply]">
+                                        <select class="woopt_apply_selector"
+                                                name="woopt_actions[<?php echo esc_attr( $key ); ?>][apply]">
                                             <option value="apply_all" <?php selected( $apply, 'apply_all' ); ?>><?php esc_html_e( 'All products', 'woo-product-timer' ); ?></option>
                                             <option value="apply_variation" <?php selected( $apply, 'apply_variation' ); ?>><?php esc_html_e( 'Variations only', 'woo-product-timer' ); ?></option>
                                             <option value="apply_not_variation" <?php selected( $apply, 'apply_not_variation' ); ?>><?php esc_html_e( 'Non-variation products', 'woo-product-timer' ); ?></option>
@@ -1815,7 +1868,11 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                 <div class="woopt_tr hide_apply show_if_apply_product">
                                     <div class="woopt_th"><?php esc_html_e( 'Products', 'woo-product-timer' ); ?></div>
                                     <div class="woopt_td woopt_action_td">
-                                        <select class="wc-product-search woopt-product-search" multiple="multiple" name="woopt_actions[<?php echo esc_attr( $key ); ?>][apply_val][products][]" data-placeholder="<?php esc_attr_e( 'Search for a product&hellip;', 'woo-product-timer' ); ?>" data-action="woocommerce_json_search_products_and_variations" data-val="<?php echo esc_attr( $apply === 'apply_product' ? ( is_array( $apply_val ) ? implode( ',', ( $apply_val['products'] ?? [] ) ) : $apply_val ) : '' ); ?>">
+                                        <select class="wc-product-search woopt-product-search" multiple="multiple"
+                                                name="woopt_actions[<?php echo esc_attr( $key ); ?>][apply_val][products][]"
+                                                data-placeholder="<?php esc_attr_e( 'Search for a product&hellip;', 'woo-product-timer' ); ?>"
+                                                data-action="woocommerce_json_search_products_and_variations"
+                                                data-val="<?php echo esc_attr( $apply === 'apply_product' ? ( is_array( $apply_val ) ? implode( ',', ( $apply_val['products'] ?? [] ) ) : $apply_val ) : '' ); ?>">
 											<?php
 											if ( is_string( $apply_val ) ) {
 												$product_ids = explode( ',', $apply_val );
@@ -1850,7 +1907,8 @@ if ( ! function_exists( 'woopt_init' ) ) {
 											?>
                                         </div>
                                         <div class="woopt_add_apply_combination">
-                                            <a class="woopt_new_apply_combination" href="#"><?php esc_attr_e( '+ Add condition', 'woo-product-timer' ); ?></a>
+                                            <a class="woopt_new_apply_combination"
+                                               href="#"><?php esc_attr_e( '+ Add condition', 'woo-product-timer' ); ?></a>
                                         </div>
                                     </div>
                                 </div>
@@ -1866,7 +1924,9 @@ if ( ! function_exists( 'woopt_init' ) ) {
 											$term_slugs = [];
 										}
 										?>
-                                        <select class="woopt_terms" multiple="multiple" name="woopt_actions[<?php echo esc_attr( $key ); ?>][apply_val][terms][]" data-<?php echo esc_attr( $apply ); ?>="<?php echo esc_attr( implode( ',', $term_slugs ) ); ?>">
+                                        <select class="woopt_terms" multiple="multiple"
+                                                name="woopt_actions[<?php echo esc_attr( $key ); ?>][apply_val][terms][]"
+                                                data-<?php echo esc_attr( $apply ); ?>="<?php echo esc_attr( implode( ',', $term_slugs ) ); ?>">
 											<?php
 											if ( ! empty( $term_slugs ) ) {
 												$taxonomy = substr( $apply, 6 );
@@ -1882,13 +1942,15 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                     </div>
                                 </div>
 							<?php } else { ?>
-                                <input type="hidden" name="woopt_actions[<?php echo esc_attr( $key ); ?>][type]" value="product"/>
+                                <input type="hidden" name="woopt_actions[<?php echo esc_attr( $key ); ?>][type]"
+                                       value="product"/>
 							<?php } ?>
                             <div class="woopt_tr woopt_action_wrap">
                                 <div class="woopt_th"><?php esc_html_e( 'Action', 'woo-product-timer' ); ?></div>
                                 <div class="woopt_td woopt_action_td">
 									<span>
-                                        <select class="woopt_action_selector" name="woopt_actions[<?php echo esc_attr( $key ); ?>][action]">
+                                        <select class="woopt_action_selector"
+                                                name="woopt_actions[<?php echo esc_attr( $key ); ?>][action]">
                                             <option value=""><?php esc_html_e( 'Choose action', 'woo-product-timer' ); ?></option>
                                             <option value="set_instock" <?php selected( $action, 'set_instock' ); ?>><?php esc_html_e( 'Set in stock', 'woo-product-timer' ); ?></option>
                                             <option value="set_outofstock" <?php selected( $action, 'set_outofstock' ); ?>><?php esc_html_e( 'Set out of stock', 'woo-product-timer' ); ?></option>
@@ -1908,12 +1970,17 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                         </select>
                                     </span>
                                     <span class="woopt_hide woopt_show_if_set_regularprice woopt_show_if_set_saleprice">
-                                        <input class="woopt_price" name="woopt_actions[<?php echo esc_attr( $key ); ?>][action_val][value]" value="<?php echo $price; ?>" type="number" step="any" style="width: 80px; float: left"/>
+                                        <input class="woopt_price"
+                                               name="woopt_actions[<?php echo esc_attr( $key ); ?>][action_val][value]"
+                                               value="<?php echo $price; ?>" type="number" step="any"
+                                               style="width: 80px; float: left"/>
                                     </span>
                                     <span class="woopt_hide woopt_show_if_set_regularprice woopt_show_if_set_saleprice">
-										<select name="woopt_actions[<?php echo esc_attr( $key ); ?>][action_val][base]" class="woopt_action_price_base">
+										<select name="woopt_actions[<?php echo esc_attr( $key ); ?>][action_val][base]"
+                                                class="woopt_action_price_base">
 											<option value="ps" <?php selected( 'ps', $base ); ?>><?php esc_html_e( '% of sale price', 'woo-product-timer' ); ?></option>
-											<option value="pr" <?php selected( 'pr', $base ); ?> data-set_saleprice="<?php esc_attr_e( '% of regular price', 'woo-product-timer' ); ?>" data-set_regularprice="<?php esc_attr_e( '%', 'woo-product-timer' ); ?>"><?php esc_html_e( '% of regular price', 'woo-product-timer' ); ?></option>
+											<option value="pr" <?php selected( 'pr', $base ); ?> data-set_saleprice="<?php esc_attr_e( '% of regular price', 'woo-product-timer' ); ?>"
+                                                    data-set_regularprice="<?php esc_attr_e( '%', 'woo-product-timer' ); ?>"><?php esc_html_e( '% of regular price', 'woo-product-timer' ); ?></option>
 											<option value="fa" <?php selected( 'fa', $base ); ?>><?php echo get_woocommerce_currency_symbol(); ?></option>
 										</select>
 									</span> <span class="woopt_hide woopt_show_if_set_catalog_visibility">
@@ -1942,7 +2009,8 @@ if ( ! function_exists( 'woopt_init' ) ) {
 										?>
                                     </div>
                                     <div class="woopt_add_time">
-                                        <a href="#" class="woopt_new_time"><?php esc_html_e( '+ Add time', 'woo-product-timer' ); ?></a>
+                                        <a href="#"
+                                           class="woopt_new_time"><?php esc_html_e( '+ Add time', 'woo-product-timer' ); ?></a>
                                     </div>
                                 </div>
                             </div>
@@ -2001,7 +2069,8 @@ if ( ! function_exists( 'woopt_init' ) ) {
 					?>
                     <div class="woopt_apply_combination">
                         <span class="woopt_apply_combination_remove">&times;</span> <span>
-                                    <select class="woopt_apply_combination_select" name="woopt_actions[<?php echo esc_attr( $key ); ?>][apply_val][combined][<?php echo esc_attr( $combination_key ); ?>][type]">
+                                    <select class="woopt_apply_combination_select"
+                                            name="woopt_actions[<?php echo esc_attr( $key ); ?>][apply_val][combined][<?php echo esc_attr( $combination_key ); ?>][type]">
 	                                    <option value="variation" <?php selected( $combination_item_type, 'variation' ); ?>><?php esc_html_e( 'Variations only', 'woo-product-timer' ); ?></option>
 	                                    <option value="not_variation" <?php selected( $combination_item_type, 'not_variation' ); ?>><?php esc_html_e( 'Non-variation products', 'woo-product-timer' ); ?></option>
                                         <?php
@@ -2013,7 +2082,8 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                         ?>
                                     </select>
                                 </span> <span>
-                                    <select class="woopt_apply_terms woopt_apply_combination_val" multiple="multiple" name="woopt_actions[<?php echo esc_attr( $key ); ?>][apply_val][combined][<?php echo esc_attr( $combination_key ); ?>][val][]">
+                                    <select class="woopt_apply_terms woopt_apply_combination_val" multiple="multiple"
+                                            name="woopt_actions[<?php echo esc_attr( $key ); ?>][apply_val][combined][<?php echo esc_attr( $combination_key ); ?>][val][]">
                                         <?php
                                         if ( ! empty( $combination_item_val ) ) {
 	                                        foreach ( $combination_item_val as $t ) {
@@ -2088,45 +2158,82 @@ if ( ! function_exists( 'woopt_init' ) ) {
 					}
 					?>
                     <div class="woopt_time">
-                        <input type="hidden" class="woopt_time_val" name="woopt_actions[<?php echo esc_attr( $key ); ?>][timer][<?php echo esc_attr( $time_key ); ?>][val]" value="<?php echo esc_attr( $val ); ?>"/>
+                        <input type="hidden" class="woopt_time_val"
+                               name="woopt_actions[<?php echo esc_attr( $key ); ?>][timer][<?php echo esc_attr( $time_key ); ?>][val]"
+                               value="<?php echo esc_attr( $val ); ?>"/>
                         <span class="woopt_time_remove">&times;</span> <span>
-							<select class="woopt_time_type" name="woopt_actions[<?php echo esc_attr( $key ); ?>][timer][<?php echo esc_attr( $time_key ); ?>][type]">
+							<select class="woopt_time_type"
+                                    name="woopt_actions[<?php echo esc_attr( $key ); ?>][timer][<?php echo esc_attr( $time_key ); ?>][type]">
 								<option value=""><?php esc_html_e( 'Choose the time', 'woo-product-timer' ); ?></option>
-								<option value="date_on" data-show="date" <?php selected( $type, 'date_on' ); ?>><?php esc_html_e( 'On the date', 'woo-product-timer' ); ?></option>
-                                <option value="date_time_before" data-show="date_time" <?php selected( $type, 'date_time_before' ); ?>><?php esc_html_e( 'Before date & time', 'woo-product-timer' ); ?></option>
-								<option value="date_time_after" data-show="date_time" <?php selected( $type, 'date_time_after' ); ?>><?php esc_html_e( 'After date & time', 'woo-product-timer' ); ?></option>
-								<option value="date_before" data-show="date" <?php selected( $type, 'date_before' ); ?>><?php esc_html_e( 'Before date', 'woo-product-timer' ); ?></option>
-								<option value="date_after" data-show="date" <?php selected( $type, 'date_after' ); ?>><?php esc_html_e( 'After date', 'woo-product-timer' ); ?></option>
-								<option value="date_multi" data-show="date_multi" <?php selected( $type, 'date_multi' ); ?>><?php esc_html_e( 'Multiple dates', 'woo-product-timer' ); ?></option>
-								<option value="date_range" data-show="date_range" <?php selected( $type, 'date_range' ); ?>><?php esc_html_e( 'Date range', 'woo-product-timer' ); ?></option>
-								<option value="date_even" data-show="none" <?php selected( $type, 'date_even' ); ?>><?php esc_html_e( 'All even dates', 'woo-product-timer' ); ?></option>
-								<option value="date_odd" data-show="none" <?php selected( $type, 'date_odd' ); ?>><?php esc_html_e( 'All odd dates', 'woo-product-timer' ); ?></option>
-								<option value="time_range" data-show="time_range" <?php selected( $type, 'time_range' ); ?>><?php esc_html_e( 'Daily time range', 'woo-product-timer' ); ?></option>
-                                <option value="time_before" data-show="time" <?php selected( $type, 'time_before' ); ?>><?php esc_html_e( 'Daily before time', 'woo-product-timer' ); ?></option>
-								<option value="time_after" data-show="time" <?php selected( $type, 'time_after' ); ?>><?php esc_html_e( 'Daily after time', 'woo-product-timer' ); ?></option>
-                                <option value="weekly_every" data-show="weekday" <?php selected( $type, 'weekly_every' ); ?>><?php esc_html_e( 'Weekly on every', 'woo-product-timer' ); ?></option>
-                                <option value="week_even" data-show="none" <?php selected( $type, 'week_even' ); ?>><?php esc_html_e( 'All even weeks', 'woo-product-timer' ); ?></option>
-								<option value="week_odd" data-show="none" <?php selected( $type, 'week_odd' ); ?>><?php esc_html_e( 'All odd weeks', 'woo-product-timer' ); ?></option>
-                                <option value="week_no" data-show="weekno" <?php selected( $type, 'week_no' ); ?>><?php esc_html_e( 'On week No.', 'woo-product-timer' ); ?></option>
-                                <option value="monthly_every" data-show="monthday" <?php selected( $type, 'monthly_every' ); ?>><?php esc_html_e( 'Monthly on the', 'woo-product-timer' ); ?></option>
-                                <option value="month_no" data-show="monthno" <?php selected( $type, 'month_no' ); ?>><?php esc_html_e( 'On month No.', 'woo-product-timer' ); ?></option>
-                                <option value="days_less_published" data-show="number" <?php selected( $type, 'days_less_published' ); ?>><?php esc_html_e( 'Days of being published are smaller than', 'woo-product-timer' ); ?></option>
-                                <option value="days_greater_published" data-show="number" <?php selected( $type, 'days_greater_published' ); ?>><?php esc_html_e( 'Days of being published are bigger than', 'woo-product-timer' ); ?></option>
-                                <option value="every_day" data-show="none" <?php selected( $type, 'every_day' ); ?>><?php esc_html_e( 'Everyday', 'woo-product-timer' ); ?></option>
+								<option value="date_on"
+                                        data-show="date" <?php selected( $type, 'date_on' ); ?>><?php esc_html_e( 'On the date', 'woo-product-timer' ); ?></option>
+                                <option value="date_time_before"
+                                        data-show="date_time" <?php selected( $type, 'date_time_before' ); ?>><?php esc_html_e( 'Before date & time', 'woo-product-timer' ); ?></option>
+								<option value="date_time_after"
+                                        data-show="date_time" <?php selected( $type, 'date_time_after' ); ?>><?php esc_html_e( 'After date & time', 'woo-product-timer' ); ?></option>
+								<option value="date_before"
+                                        data-show="date" <?php selected( $type, 'date_before' ); ?>><?php esc_html_e( 'Before date', 'woo-product-timer' ); ?></option>
+								<option value="date_after"
+                                        data-show="date" <?php selected( $type, 'date_after' ); ?>><?php esc_html_e( 'After date', 'woo-product-timer' ); ?></option>
+								<option value="date_multi"
+                                        data-show="date_multi" <?php selected( $type, 'date_multi' ); ?>><?php esc_html_e( 'Multiple dates', 'woo-product-timer' ); ?></option>
+								<option value="date_range"
+                                        data-show="date_range" <?php selected( $type, 'date_range' ); ?>><?php esc_html_e( 'Date range', 'woo-product-timer' ); ?></option>
+								<option value="date_even"
+                                        data-show="none" <?php selected( $type, 'date_even' ); ?>><?php esc_html_e( 'All even dates', 'woo-product-timer' ); ?></option>
+								<option value="date_odd"
+                                        data-show="none" <?php selected( $type, 'date_odd' ); ?>><?php esc_html_e( 'All odd dates', 'woo-product-timer' ); ?></option>
+								<option value="time_range"
+                                        data-show="time_range" <?php selected( $type, 'time_range' ); ?>><?php esc_html_e( 'Daily time range', 'woo-product-timer' ); ?></option>
+                                <option value="time_before"
+                                        data-show="time" <?php selected( $type, 'time_before' ); ?>><?php esc_html_e( 'Daily before time', 'woo-product-timer' ); ?></option>
+								<option value="time_after"
+                                        data-show="time" <?php selected( $type, 'time_after' ); ?>><?php esc_html_e( 'Daily after time', 'woo-product-timer' ); ?></option>
+                                <option value="weekly_every"
+                                        data-show="weekday" <?php selected( $type, 'weekly_every' ); ?>><?php esc_html_e( 'Weekly on every', 'woo-product-timer' ); ?></option>
+                                <option value="week_even"
+                                        data-show="none" <?php selected( $type, 'week_even' ); ?>><?php esc_html_e( 'All even weeks', 'woo-product-timer' ); ?></option>
+								<option value="week_odd"
+                                        data-show="none" <?php selected( $type, 'week_odd' ); ?>><?php esc_html_e( 'All odd weeks', 'woo-product-timer' ); ?></option>
+                                <option value="week_no"
+                                        data-show="weekno" <?php selected( $type, 'week_no' ); ?>><?php esc_html_e( 'On week No.', 'woo-product-timer' ); ?></option>
+                                <option value="monthly_every"
+                                        data-show="monthday" <?php selected( $type, 'monthly_every' ); ?>><?php esc_html_e( 'Monthly on the', 'woo-product-timer' ); ?></option>
+                                <option value="month_no"
+                                        data-show="monthno" <?php selected( $type, 'month_no' ); ?>><?php esc_html_e( 'On month No.', 'woo-product-timer' ); ?></option>
+                                <option value="days_less_published"
+                                        data-show="number" <?php selected( $type, 'days_less_published' ); ?>><?php esc_html_e( 'Days of being published are smaller than', 'woo-product-timer' ); ?></option>
+                                <option value="days_greater_published"
+                                        data-show="number" <?php selected( $type, 'days_greater_published' ); ?>><?php esc_html_e( 'Days of being published are bigger than', 'woo-product-timer' ); ?></option>
+                                <option value="every_day"
+                                        data-show="none" <?php selected( $type, 'every_day' ); ?>><?php esc_html_e( 'Everyday', 'woo-product-timer' ); ?></option>
 							</select>
 						</span> <span class="woopt_hide woopt_show_if_date_time">
-							<input value="<?php echo esc_attr( $date_time ); ?>" class="woopt_dpk_date_time woopt_date_time_input" type="text" readonly="readonly" style="width: 300px"/>
+							<input value="<?php echo esc_attr( $date_time ); ?>"
+                                   class="woopt_dpk_date_time woopt_date_time_input" type="text" readonly="readonly"
+                                   style="width: 300px"/>
 						</span> <span class="woopt_hide woopt_show_if_date">
-							<input value="<?php echo esc_attr( $date ); ?>" class="woopt_dpk_date woopt_date_input" type="text" readonly="readonly" style="width: 300px"/>
+							<input value="<?php echo esc_attr( $date ); ?>" class="woopt_dpk_date woopt_date_input"
+                                   type="text" readonly="readonly" style="width: 300px"/>
 						</span> <span class="woopt_hide woopt_show_if_date_range">
-							<input value="<?php echo esc_attr( $date_range ); ?>" class="woopt_dpk_date_range woopt_date_input" type="text" readonly="readonly" style="width: 300px"/>
+							<input value="<?php echo esc_attr( $date_range ); ?>"
+                                   class="woopt_dpk_date_range woopt_date_input" type="text" readonly="readonly"
+                                   style="width: 300px"/>
 						</span> <span class="woopt_hide woopt_show_if_date_multi">
-							<input value="<?php echo esc_attr( $date_multi ); ?>" class="woopt_dpk_date_multi woopt_date_input" type="text" readonly="readonly" style="width: 300px"/>
+							<input value="<?php echo esc_attr( $date_multi ); ?>"
+                                   class="woopt_dpk_date_multi woopt_date_input" type="text" readonly="readonly"
+                                   style="width: 300px"/>
 						</span> <span class="woopt_hide woopt_show_if_time_range">
-							<input value="<?php echo esc_attr( $from ); ?>" class="woopt_dpk_time woopt_time_from woopt_time_input" type="text" readonly="readonly" style="width: 300px" placeholder="from"/>
-							<input value="<?php echo esc_attr( $to ); ?>" class="woopt_dpk_time woopt_time_to woopt_time_input" type="text" readonly="readonly" style="width: 300px" placeholder="to"/>
+							<input value="<?php echo esc_attr( $from ); ?>"
+                                   class="woopt_dpk_time woopt_time_from woopt_time_input" type="text"
+                                   readonly="readonly" style="width: 300px" placeholder="from"/>
+							<input value="<?php echo esc_attr( $to ); ?>"
+                                   class="woopt_dpk_time woopt_time_to woopt_time_input" type="text" readonly="readonly"
+                                   style="width: 300px" placeholder="to"/>
 						</span> <span class="woopt_hide woopt_show_if_time">
-							<input value="<?php echo esc_attr( $time ); ?>" class="woopt_dpk_time woopt_time_on woopt_time_input" type="text" readonly="readonly" style="width: 300px"/>
+							<input value="<?php echo esc_attr( $time ); ?>"
+                                   class="woopt_dpk_time woopt_time_on woopt_time_input" type="text" readonly="readonly"
+                                   style="width: 300px"/>
 						</span> <span class="woopt_hide woopt_show_if_weekday">
 							<select class="woopt_weekday">
                                 <option value="mon" <?php selected( $weekday, 'mon' ); ?>><?php esc_html_e( 'Monday', 'woo-product-timer' ); ?></option>
@@ -2160,7 +2267,8 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                 ?>
                             </select>
 						</span> <span class="woopt_hide woopt_show_if_number">
-							<input type="number" step="1" min="0" class="woopt_number" value="<?php echo esc_attr( (int) $number ); ?>"/>
+							<input type="number" step="1" min="0" class="woopt_number"
+                                   value="<?php echo esc_attr( (int) $number ); ?>"/>
 						</span>
                     </div>
 					<?php
