@@ -3,7 +3,7 @@
 Plugin Name: WPC Product Timer for WooCommerce
 Plugin URI: https://wpclever.net/
 Description: WPC Product Timer helps you add many actions for the product based on the conditionals of the time.
-Version: 5.2.5
+Version: 5.2.6
 Author: WPClever
 Author URI: https://wpclever.net
 Text Domain: woo-product-timer
@@ -19,7 +19,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'WOOPT_VERSION' ) && define( 'WOOPT_VERSION', '5.2.5' );
+! defined( 'WOOPT_VERSION' ) && define( 'WOOPT_VERSION', '5.2.6' );
 ! defined( 'WOOPT_LITE' ) && define( 'WOOPT_LITE', __FILE__ );
 ! defined( 'WOOPT_FILE' ) && define( 'WOOPT_FILE', __FILE__ );
 ! defined( 'WOOPT_URI' ) && define( 'WOOPT_URI', plugin_dir_url( __FILE__ ) );
@@ -1574,19 +1574,27 @@ if ( ! function_exists( 'woopt_init' ) ) {
 					}
 					?>
                     <div class="wpclever_settings_page wrap">
-                        <h1 class="wpclever_settings_page_title"><?php echo esc_html__( 'WPC Product Timer', 'woo-product-timer' ) . ' ' . esc_html( WOOPT_VERSION ) . ' ' . ( defined( 'WOOPT_PREMIUM' ) ? '<span class="premium" style="display: none">' . esc_html__( 'Premium', 'woo-product-timer' ) . '</span>' : '' ); ?></h1>
-                        <div class="wpclever_settings_page_desc about-text">
-                            <p>
-								<?php printf( /* translators: stars */ esc_html__( 'Thank you for using our plugin! If you are satisfied, please reward it a full five-star %s rating.', 'woo-product-timer' ), '<span style="color:#ffb900">&#9733;&#9733;&#9733;&#9733;&#9733;</span>' ); ?>
-                                <br/>
-                                <a href="<?php echo esc_url( WOOPT_REVIEWS ); ?>"
-                                   target="_blank"><?php esc_html_e( 'Reviews', 'woo-product-timer' ); ?></a> |
-                                <a href="<?php echo esc_url( WOOPT_CHANGELOG ); ?>"
-                                   target="_blank"><?php esc_html_e( 'Changelog', 'woo-product-timer' ); ?></a> |
-                                <a href="<?php echo esc_url( WOOPT_DISCUSSION ); ?>"
-                                   target="_blank"><?php esc_html_e( 'Discussion', 'woo-product-timer' ); ?></a>
-                            </p>
+                        <div class="wpclever_settings_page_header">
+                            <a class="wpclever_settings_page_header_logo" href="https://wpclever.net/"
+                               target="_blank" title="Visit wpclever.net"></a>
+                            <div class="wpclever_settings_page_header_text">
+                                <div class="wpclever_settings_page_title"><?php echo esc_html__( 'WPC Product Timer', 'woo-product-timer' ) . ' ' . esc_html( WOOPT_VERSION ) . ' ' . ( defined( 'WOOPT_PREMIUM' ) ? '<span class="premium" style="display: none">' . esc_html__( 'Premium', 'woo-product-timer' ) . '</span>' : '' ); ?></div>
+                                <div class="wpclever_settings_page_desc about-text">
+                                    <p>
+										<?php printf( /* translators: stars */ esc_html__( 'Thank you for using our plugin! If you are satisfied, please reward it a full five-star %s rating.', 'woo-product-timer' ), '<span style="color:#ffb900">&#9733;&#9733;&#9733;&#9733;&#9733;</span>' ); ?>
+                                        <br/>
+                                        <a href="<?php echo esc_url( WOOPT_REVIEWS ); ?>"
+                                           target="_blank"><?php esc_html_e( 'Reviews', 'woo-product-timer' ); ?></a> |
+                                        <a href="<?php echo esc_url( WOOPT_CHANGELOG ); ?>"
+                                           target="_blank"><?php esc_html_e( 'Changelog', 'woo-product-timer' ); ?></a>
+                                        |
+                                        <a href="<?php echo esc_url( WOOPT_DISCUSSION ); ?>"
+                                           target="_blank"><?php esc_html_e( 'Discussion', 'woo-product-timer' ); ?></a>
+                                    </p>
+                                </div>
+                            </div>
                         </div>
+                        <h2></h2>
                         <div class="wpclever_settings_page_nav">
                             <h2 class="nav-tab-wrapper">
                                 <a href="<?php echo esc_url( admin_url( 'admin.php?page=wpclever-woopt-global' ) ); ?>"

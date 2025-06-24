@@ -37,6 +37,10 @@
 }
 
 /* Menu */
+body[class*=wpclever_page_], body[class*=toplevel_page_wpclever] {
+  overflow-x: hidden;
+}
+
 #adminmenu .toplevel_page_wpclever .wp-menu-image img {
   width: 30px !important;
   padding-top: 2px !important;
