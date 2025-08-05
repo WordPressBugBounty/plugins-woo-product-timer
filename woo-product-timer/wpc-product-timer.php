@@ -3,7 +3,7 @@
 Plugin Name: WPC Product Timer for WooCommerce
 Plugin URI: https://wpclever.net/
 Description: WPC Product Timer helps you add many actions for the product based on the conditionals of the time.
-Version: 5.2.6
+Version: 5.2.7
 Author: WPClever
 Author URI: https://wpclever.net
 Text Domain: woo-product-timer
@@ -12,14 +12,14 @@ Requires Plugins: woocommerce
 Requires at least: 4.0
 Tested up to: 6.8
 WC requires at least: 3.0
-WC tested up to: 9.9
+WC tested up to: 10.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'WOOPT_VERSION' ) && define( 'WOOPT_VERSION', '5.2.6' );
+! defined( 'WOOPT_VERSION' ) && define( 'WOOPT_VERSION', '5.2.7' );
 ! defined( 'WOOPT_LITE' ) && define( 'WOOPT_LITE', __FILE__ );
 ! defined( 'WOOPT_FILE' ) && define( 'WOOPT_FILE', __FILE__ );
 ! defined( 'WOOPT_URI' ) && define( 'WOOPT_URI', plugin_dir_url( __FILE__ ) );
@@ -1875,7 +1875,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                             <option value="apply_all" <?php selected( $apply, 'apply_all' ); ?>><?php esc_html_e( 'All products', 'woo-product-timer' ); ?></option>
                                             <option value="apply_variation" <?php selected( $apply, 'apply_variation' ); ?>><?php esc_html_e( 'Variations only', 'woo-product-timer' ); ?></option>
                                             <option value="apply_not_variation" <?php selected( $apply, 'apply_not_variation' ); ?>><?php esc_html_e( 'Non-variation products', 'woo-product-timer' ); ?></option>
-                                            <option value="apply_product" <?php selected( $apply, 'apply_product' ); ?>><?php esc_html_e( 'Products', 'woo-product-timer' ); ?></option>
+                                            <option value="apply_product" <?php selected( $apply, 'apply_product' ); ?>><?php esc_html_e( 'Selected products', 'woo-product-timer' ); ?></option>
                                             <option value="apply_combination" <?php selected( $apply, 'apply_combination' ); ?>><?php esc_html_e( 'Combined sources', 'woo-product-timer' ); ?></option>
 											<?php
 											//$taxonomies = get_taxonomies( [ 'object_type' => [ 'product' ] ], 'objects' );
