@@ -3,8 +3,8 @@ Contributors: wpclever
 Donate link: https://wpclever.net
 Tags: woocommerce, wpc, timer, schedule
 Tested up to: 6.8
-Version: 5.2.7
-Stable tag: 5.2.7
+Version: 5.2.8
+Stable tag: 5.2.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,7 +20,7 @@ WPC Product Timer helps you add many actions for the product based on the condit
 
 > As WPC Product Timer mostly works in the back-end, if you'd like a front-end solution, try our new plugin [WPC Countdown Timer](https://wordpress.org/plugins/wpc-countdown-timer/ "WPC Countdown Timer") for increasing the conversion rate and level up the appearance of your store with a beautiful timer.
 
-= How to set up timers on single product page =
+= How to set up timers on a single product page =
 
 https://www.youtube.com/watch?v=5WwZNXGA2kA
 
@@ -52,15 +52,15 @@ From the admin dashboard, go to WPClever >> Product Timer >> click on the Global
 
 Consider the following cases anyone might encounter when it comes to managing your shop:
 
-- (1) A new item will be opened for sale in your shop in the next Monday.
-- (2) You will stop selling an old fashioned product starting from this weekend.
+- (1) A new item will be opened for sale in your shop on the next Monday.
+- (2) You will stop selling an old-fashioned product starting from this weekend.
 - (3) You will be running a sale event for one week starting from the first day of the next month.
 - (4) You want to hide some products from search at certain times of the day.
-- (5) Some products from your store are seasonal so they’re purchasable at certain periods of time only.
+- (5) Some products from your store are seasonal, so they’re purchasable at certain periods of time only.
 - (6) You have items that are temporarily unsellable, but you still want to keep them visible to your customers.
 - (7) Your shop sells Christmas decorative ornaments from December 1st to December 24th every day from 7:00 to 21:00.
 - (8) Your restaurant serves breakfast before 9 A.M. and desserts after 8 P.M. only.
-- (9) You’d like to run festive sale campaigns on holidays, ie. on New Year’s Day, Independence Day, Labor Day, Thanksgiving, and Christmas Day.
+- (9) You’d like to run festive sale campaigns on holidays, i.e., on New Year’s Day, Independence Day, Labor Day, Thanksgiving, and Christmas Day.
 - (10) Your shop has recurring flash sales every Monday to keep buyers motivated to shop more often & get a fast turnover of stock.
 - (11) You sell alternating items on odd days and even days of the month.
 - (12) You have a need to hide your newly arrived product for stock checks from July 3rd to July 31st, then put it on sale at $29 for a week to promote sales upon product launch and change it back to its regular price at $39 from 8:00 August 15th.
@@ -75,11 +75,11 @@ Products’ Visibility: In (4), users can set the product as hidden to prevent i
 
 Products’ Availability: To completely stop your customers from buying specific items, users will need to combine two actions: setting those items as hidden and unpurchasable. This will ensure that they’re not available for sale but can still be seen from the exact product link as in (6).
 
-Products’ Prices: It’s totally possible for shop owners to set sale prices or change the prices back to the regular using any kind of time conditionals. Remarkably, retailers can even plan ahead their promotional schedule for the whole year or every year using the recurring time conditionals.
+Products’ Prices: It’s totally possible for shop owners to set sale prices or change the prices back to the regular using any kind of time conditions. Remarkably, retailers can even plan ahead their promotional schedule for the whole year or every year using the recurring time conditions.
 
 = Complete Time Conditionals for Use =
 
-We can proudly claim that our plugin is the best one concerning the time conditionals settings. WPC Product Timer has the capability to define all kinds of deadlines for the actions including both time (time point, consecutive & separate time periods) and date (exact dates, recurring dates, date range, separate dates, odd/ even dates, weekly on specific dates). Besides, the plugin displays the current date & time as well so that users can define the deadlines faster for actions. When it comes to choosing a date or time point, you can do it by selecting from the calendar or enter the correctly formatted numbers in the box.
+We can proudly claim that our plugin is the best one concerning the time conditional settings. WPC Product Timer has the ability to define all kinds of deadlines for the actions including both time (time point, consecutive and separate time periods) and date (exact dates, recurring dates, date range, separate dates, odd/ even dates, weekly on specific dates). Besides, the plugin displays the current date and time as well so that users can define the deadlines faster for actions. When it comes to choosing a date or time point, you can do it by selecting from the calendar or entering the correctly formatted numbers in the box.
 
 - On an exact date: as in (1)
 - Set a date range: as in (3), (7)
@@ -94,7 +94,7 @@ We can proudly claim that our plugin is the best one concerning the time conditi
 - Month No.
 - Everyday
 
-One special example of setting complex timeframes for your product is (12). This case requires adding 3 actions with 3 different kinds of time conditionals. To be specific, you should add in this order: 1. Set hidden, date range: July 3rd - July 31st, 2. Set sale price - $29, date range: August 3rd - August 10th (assuming product launched on August 3rd), 3. Set regular price, after date & time: August 15th - 8:00. Adding actions in order is just necessary for users to check on every phase of their launch schedule, in fact, the order doesn’t affect the result. You can add actions in any order that you like as long as time conditionals make sense.
+One special example of setting complex timeframes for your product is (12). This case requires adding 3 actions with 3 different kinds of time conditions. To be specific, you should add in this order: 1. Set hidden, date range: July 3rd - July 31st, 2. Set sale price - $29, date range: August 3rd - August 10th (assuming product launched on August 3rd), 3. Set regular price, after date & time: August 15th - 8:00. Adding actions in order is just necessary for users to check on every phase of their launch schedule, in fact, the order doesn’t affect the result. You can add actions in any order that you like as long as time conditions make sense.
 
 = Achievable Goals =
 
@@ -108,16 +108,16 @@ One special example of setting complex timeframes for your product is (12). This
 - Enable Sold Individually
 - Disable Sold Individually
 
-These actions can work alone or combine with others if the time conditionals are properly chosen. With other complicated goals, at least 2 actions are needed to complete.
+These actions can work alone or combine with others if the time conditions are properly chosen. With other complicated goals, at least 2 actions are needed to complete.
 
 = Time Conditionals =
 
 Each action only carries 1 DATE & 1 TIME part at maximum. All the chosen conditionals must be unifying and meaningful. The relationship between conditionals in each action is the AND type, not OR type, so you must set the date and time that make sense and can be satisfied.
 
-- Incorrect: Weekly on every Thursday, Friday >> Correct: These are two date parts (2 weekdays, must separate them into 2 actions: [Action 1] Weekly on every Thursday, [Action 2]  Weekly on every Friday.
+- Incorrect: Weekly on every Thursday, Friday >> Correct: These are two date parts (2 weekdays, must separate them into 2 actions: [Action 1] Weekly on every Thursday, [Action 2] Weekly on every Friday.
 - Incorrect: Daily time range: 6 AM-6 PM, 8 PM-10 PM >> Correct: These are two time ranges, must separate them into 2 actions: [Action 1] Daily time range: 6 AM-6 PM, [Action 2] Daily time range: 8 PM-10 PM.
 - Correct: Weekly on every Monday, Daily time range: 6 AM-6 PM >> This is achievable, which means “from 6 AM to 6 PM (time part) of every Monday of each week (date part)”
-- Correct: On odd dates, Weekly on every Monday >> This is achievable and applicable to any day that satisfies BOTH conditions: “24 hours of all odd dates that are Mondays of the week’.
+- Correct: On odd dates, Weekly on every Monday >> This is achievable and applicable to any day that satisfies BOTH conditions: “24 hours of all odd dates that are Mondays of the week".
 - Correct: Date range: 01-31 March, Weekly on Every Monday, Daily after time: 5 PM >> This is achievable and applicable to any day that satisfies all conditions, which means “after 5 PM of all Mondays in March.”
 
 There are even more achievable complex date and time combinations with WPC Product Timers as long as you can create meaningful conditionals that are satisfiable with the “AND” relationship among them. Learn more at the [Online Documentation](https://doc.wpclever.net/woopt/).
@@ -130,10 +130,14 @@ Being able to tackle even the most complicated series of actions with complex us
 
 1. Please make sure that you installed WooCommerce
 2. Go to plugins in your dashboard and select "Add New"
-3. Search for "WPC Product Timer", Install & Activate it
-4. When adding/editing the product you can choose the "Timer" tab then add action & time conditional
+3. Search for "WPC Product Timer," Install & Activate it
+4. When adding/editing the product, you can choose the "Timer" tab, then add action and time conditional
 
 == Changelog ==
+
+= 5.2.8 =
+* Fixed: Minor CSS/JS issues in the backend
+* Updated: Compatible with WP 6.8 & Woo 10.2
 
 = 5.2.7 =
 * Updated: Optimized the code
