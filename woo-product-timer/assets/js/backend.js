@@ -236,53 +236,6 @@
     }
   });
 
-  $(document).on('click touch', '.woopt-import-export', function(e) {
-    if (!$('#woopt_import_export').length) {
-      $('body').append('<div id=\'woopt_import_export\'></div>');
-    }
-
-    $('#woopt_import_export').html('Loading...');
-
-    $('#woopt_import_export').dialog({
-      minWidth: 560,
-      title: 'Import / Export',
-      modal: true,
-      dialogClass: 'wpc-dialog',
-      open: function() {
-        $('.ui-widget-overlay').bind('click', function() {
-          $('#woopt_import_export').dialog('close');
-        });
-      },
-    });
-
-    var data = {
-      action: 'woopt_import_export', nonce: woopt_vars.nonce,
-    };
-
-    $.post(ajaxurl, data, function(response) {
-      $('#woopt_import_export').html(response);
-    });
-
-    e.preventDefault();
-  });
-
-  $(document).on('click touch', '.woopt-import-export-save', function(e) {
-    if (confirm('Are you sure?')) {
-      $(this).addClass('disabled');
-
-      var actions = $('.woopt_import_export_data').val();
-      var data = {
-        action: 'woopt_import_export_save',
-        nonce: woopt_vars.nonce,
-        actions: actions,
-      };
-
-      $.post(ajaxurl, data, function(response) {
-        location.reload();
-      });
-    }
-  });
-
   $(document).on('click touch', '.woopt_edit', function(e) {
     var pid = $(this).attr('data-pid');
     var name = $(this).attr('data-name');

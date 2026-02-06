@@ -3,30 +3,30 @@
 Plugin Name: WPC Product Timer for WooCommerce
 Plugin URI: https://wpclever.net/
 Description: WPC Product Timer helps you add many actions for the product based on the conditionals of the time.
-Version: 5.2.8
+Version: 5.3.1
 Author: WPClever
 Author URI: https://wpclever.net
 Text Domain: woo-product-timer
 Domain Path: /languages/
 Requires Plugins: woocommerce
 Requires at least: 4.0
-Tested up to: 6.8
+Tested up to: 6.9
 WC requires at least: 3.0
-WC tested up to: 10.2
+WC tested up to: 10.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'WOOPT_VERSION' ) && define( 'WOOPT_VERSION', '5.2.8' );
+! defined( 'WOOPT_VERSION' ) && define( 'WOOPT_VERSION', '5.3.1' );
 ! defined( 'WOOPT_LITE' ) && define( 'WOOPT_LITE', __FILE__ );
 ! defined( 'WOOPT_FILE' ) && define( 'WOOPT_FILE', __FILE__ );
 ! defined( 'WOOPT_URI' ) && define( 'WOOPT_URI', plugin_dir_url( __FILE__ ) );
 ! defined( 'WOOPT_DIR' ) && define( 'WOOPT_DIR', plugin_dir_path( __FILE__ ) );
 ! defined( 'WOOPT_DOCS' ) && define( 'WOOPT_DOCS', 'https://doc.wpclever.net/woopt/' );
 ! defined( 'WOOPT_SUPPORT' ) && define( 'WOOPT_SUPPORT', 'https://wpclever.net/support?utm_source=support&utm_medium=woopt&utm_campaign=wporg' );
-! defined( 'WOOPT_REVIEWS' ) && define( 'WOOPT_REVIEWS', 'https://wordpress.org/support/plugin/woo-product-timer/reviews/?filter=5' );
+! defined( 'WOOPT_REVIEWS' ) && define( 'WOOPT_REVIEWS', 'https://wordpress.org/support/plugin/woo-product-timer/reviews/' );
 ! defined( 'WOOPT_CHANGELOG' ) && define( 'WOOPT_CHANGELOG', 'https://wordpress.org/plugins/woo-product-timer/#developers' );
 ! defined( 'WOOPT_DISCUSSION' ) && define( 'WOOPT_DISCUSSION', 'https://wordpress.org/support/plugin/woo-product-timer' );
 ! defined( 'WPC_URI' ) && define( 'WPC_URI', WOOPT_URI );
@@ -171,10 +171,6 @@ if ( ! function_exists( 'woopt_init' ) ) {
                     // Ajax edit
                     add_action( 'wp_ajax_woopt_edit', [ $this, 'ajax_edit_timer' ] );
                     add_action( 'wp_ajax_woopt_edit_save', [ $this, 'ajax_save_timer' ] );
-
-                    // Ajax import / export
-                    add_action( 'wp_ajax_woopt_import_export', [ $this, 'ajax_import_export' ] );
-                    add_action( 'wp_ajax_woopt_import_export_save', [ $this, 'ajax_import_export_save' ] );
 
                     // Export
                     add_filter( 'woocommerce_product_export_column_names', [ $this, 'export_columns' ] );
@@ -1319,8 +1315,14 @@ if ( ! function_exists( 'woopt_init' ) ) {
 
                 function register_settings() {
                     // settings
-                    register_setting( 'woopt_settings', 'woopt_features' );
-                    register_setting( 'woopt_settings', 'woopt_actions' );
+                    register_setting( 'woopt_settings', 'woopt_features', [
+                            'type'              => 'array',
+                            'sanitize_callback' => [ $this, 'sanitize_array' ],
+                    ] );
+                    register_setting( 'woopt_settings', 'woopt_actions', [
+                            'type'              => 'array',
+                            'sanitize_callback' => [ $this, 'sanitize_array' ],
+                    ] );
                 }
 
                 function admin_menu() {
@@ -1491,10 +1493,9 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                             <td>
                                                 <p class="description">
                                                     Actions are checked from top to bottom. The last one that matches
-                                                    the current time will be selected to execute. So if you want to hide
-                                                    a product and only show it on Fridays, first set it to hide every
-                                                    day, then in the following action, set it to show weekly every
-                                                    Friday.
+                                                    the current time will be executed. So if you want to hide a product
+                                                    and only show it on Fridays, first set it to hide every day, then in
+                                                    the following action, set it to show weekly every Friday.
                                                 </p>
                                                 <div class="woopt_actions">
                                                     <?php
@@ -1513,10 +1514,17 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                                            target="_blank" class="button"
                                                            onclick="return confirm('This feature only available in Premium Version!\nBuy it now? Just $29')">
                                                             <?php esc_html_e( '+ Add action', 'woo-product-timer' ); ?>
-                                                        </a> <a href="#" class="woopt_expand_all">
+                                                        </a>
+                                                        <a href="#" class="woopt_expand_all">
                                                             <?php esc_html_e( 'Expand All', 'woo-product-timer' ); ?>
-                                                        </a> <a href="#" class="woopt_collapse_all">
+                                                        </a>
+                                                        <a href="#" class="woopt_collapse_all">
                                                             <?php esc_html_e( 'Collapse All', 'woo-product-timer' ); ?>
+                                                        </a>
+                                                        <a href="https://wpclever.net/downloads/product-timer?utm_source=pro&utm_medium=woopt&utm_campaign=wporg"
+                                                           target="_blank"
+                                                           onclick="return confirm('This feature only available in Premium Version!\nBuy it now? Just $29')">
+                                                            <?php esc_html_e( 'Import / Export', 'woo-product-timer' ); ?>
                                                         </a>
                                                     </div>
                                                 </div>
@@ -2448,7 +2456,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
 
                     if ( $product_id ) {
                         $actions = get_post_meta( $product_id, 'woopt_actions', true );
-                        echo '<textarea class="woopt_edit_data" style="width: 100%; height: 200px">' . ( ! empty( $actions ) ? json_encode( $actions ) : '' ) . '</textarea>';
+                        echo '<textarea class="woopt_edit_data" style="width: 100%; height: 200px">' . esc_textarea( ! empty( $actions ) ? wp_json_encode( $actions, JSON_PRETTY_PRINT ) : '' ) . '</textarea>';
                         echo '<div style="display: flex; align-items: center"><button class="button button-primary woopt_edit_save" data-pid="' . $product_id . '">' . esc_html__( 'Update', 'woo-product-timer' ) . '</button>';
                         echo '<span class="woopt_edit_message" style="margin-left: 10px"></span></div>';
                     }
@@ -2475,39 +2483,6 @@ if ( ! function_exists( 'woopt_init' ) ) {
                             esc_html_e( 'Updated successfully!', 'woo-product-timer' );
                         } else {
                             esc_html_e( 'Have an error!', 'woo-product-timer' );
-                        }
-                    }
-
-                    wp_die();
-                }
-
-                function ajax_import_export() {
-                    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'woopt-security' ) ) {
-                        die( 'Permissions check failed!' );
-                    }
-
-                    $actions = self::$global_actions;
-                    echo '<textarea class="woopt_import_export_data" style="width: 100%; height: 200px">' . ( ! empty( $actions ) ? json_encode( $actions ) : '' ) . '</textarea>';
-                    echo '<div style="display: flex; align-items: center"><button class="button button-primary woopt-import-export-save">' . esc_html__( 'Update', 'woo-product-timer' ) . '</button>';
-                    echo '<span style="color: #ff4f3b; font-size: 10px; margin-left: 10px">' . esc_html__( '* All current Actions will be replaced after pressing Update!', 'woo-product-timer' ) . '</span>';
-                    echo '</div>';
-
-                    wp_die();
-                }
-
-                function ajax_import_export_save() {
-                    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'woopt-security' ) || ! current_user_can( 'manage_options' ) ) {
-                        die( 'Permissions check failed!' );
-                    }
-
-                    $actions = sanitize_textarea_field( trim( $_POST['actions'] ) );
-
-                    if ( ! empty( $actions ) ) {
-                        $actions = json_decode( stripcslashes( $actions ) );
-
-                        if ( $actions !== null ) {
-                            update_option( 'woopt_actions', $actions );
-                            echo 'Done!';
                         }
                     }
 
@@ -2552,12 +2527,16 @@ if ( ! function_exists( 'woopt_init' ) ) {
                     return $object;
                 }
 
-                function sanitize_array( $var ) {
-                    if ( is_array( $var ) ) {
-                        return array_map( [ __CLASS__, 'sanitize_array' ], $var );
-                    } else {
-                        return is_scalar( $var ) ? sanitize_text_field( $var ) : $var;
+                public static function sanitize_array( $arr ) {
+                    foreach ( (array) $arr as $k => $v ) {
+                        if ( is_array( $v ) ) {
+                            $arr[ $k ] = self::sanitize_array( $v );
+                        } else {
+                            $arr[ $k ] = sanitize_post_field( 'post_content', $v, 0, 'db' );
+                        }
                     }
+
+                    return $arr;
                 }
 
                 public static function format_price( $price ) {

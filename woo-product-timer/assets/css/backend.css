@@ -530,7 +530,7 @@
 
 /* WPC Dialog */
 
-.ui-widget-overlay {
+.ui-dialog.wpc-dialog + .ui-widget-overlay {
     position: fixed;
     top: 0;
     left: 0;
