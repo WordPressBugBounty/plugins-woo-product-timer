@@ -3,7 +3,7 @@
 Plugin Name: WPC Product Timer for WooCommerce
 Plugin URI: https://wpclever.net/
 Description: WPC Product Timer helps you add many actions for the product based on the conditionals of the time.
-Version: 5.3.1
+Version: 5.3.2
 Author: WPClever
 Author URI: https://wpclever.net
 Text Domain: woo-product-timer
@@ -12,14 +12,14 @@ Requires Plugins: woocommerce
 Requires at least: 4.0
 Tested up to: 6.9
 WC requires at least: 3.0
-WC tested up to: 10.4
+WC tested up to: 10.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'WOOPT_VERSION' ) && define( 'WOOPT_VERSION', '5.3.1' );
+! defined( 'WOOPT_VERSION' ) && define( 'WOOPT_VERSION', '5.3.2' );
 ! defined( 'WOOPT_LITE' ) && define( 'WOOPT_LITE', __FILE__ );
 ! defined( 'WOOPT_FILE' ) && define( 'WOOPT_FILE', __FILE__ );
 ! defined( 'WOOPT_URI' ) && define( 'WOOPT_URI', plugin_dir_url( __FILE__ ) );
@@ -31,6 +31,7 @@ defined( 'ABSPATH' ) || exit;
 ! defined( 'WOOPT_DISCUSSION' ) && define( 'WOOPT_DISCUSSION', 'https://wordpress.org/support/plugin/woo-product-timer' );
 ! defined( 'WPC_URI' ) && define( 'WPC_URI', WOOPT_URI );
 
+include 'includes/log/wpc-log.php';
 include 'includes/dashboard/wpc-dashboard.php';
 include 'includes/kit/wpc-kit.php';
 include 'includes/hpos.php';
@@ -69,6 +70,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
 
                     // Settings
                     add_action( 'admin_init', [ $this, 'register_settings' ] );
+                    add_filter( 'pre_update_option', [ $this, 'last_saved' ], 10, 2 );
                     add_action( 'admin_menu', [ $this, 'admin_menu' ] );
 
                     // Enqueue backend scripts
@@ -1315,6 +1317,10 @@ if ( ! function_exists( 'woopt_init' ) ) {
 
                 function register_settings() {
                     // settings
+                    register_setting( 'woopt_settings', 'woopt_settings', [
+                            'type'              => 'array',
+                            'sanitize_callback' => [ $this, 'sanitize_array' ],
+                    ] );
                     register_setting( 'woopt_settings', 'woopt_features', [
                             'type'              => 'array',
                             'sanitize_callback' => [ $this, 'sanitize_array' ],
@@ -1323,6 +1329,15 @@ if ( ! function_exists( 'woopt_init' ) ) {
                             'type'              => 'array',
                             'sanitize_callback' => [ $this, 'sanitize_array' ],
                     ] );
+                }
+
+                function last_saved( $value, $option ) {
+                    if ( $option == 'woopt_settings' ) {
+                        $value['_last_saved']    = current_time( 'timestamp' );
+                        $value['_last_saved_by'] = get_current_user_id();
+                    }
+
+                    return $value;
                 }
 
                 function admin_menu() {
@@ -1532,7 +1547,17 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                         </tr>
                                         <tr class="submit">
                                             <th colspan="2">
-                                                <?php settings_fields( 'woopt_settings' ); ?><?php submit_button(); ?>
+                                                <div class="wpclever_submit">
+                                                    <?php
+                                                    echo '<input type="hidden" name="woopt_settings[version]" value="' . esc_attr( WOOPT_VERSION ) . '"/>';
+                                                    settings_fields( 'woopt_settings' );
+                                                    submit_button( '', 'primary', 'submit', false );
+
+                                                    if ( function_exists( 'wpc_last_saved' ) ) {
+                                                        wpc_last_saved( get_option( 'woopt_settings', [] ) );
+                                                    }
+                                                    ?>
+                                                </div>
                                             </th>
                                         </tr>
                                     </table>
