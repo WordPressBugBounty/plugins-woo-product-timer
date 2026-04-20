@@ -3,7 +3,7 @@
 Plugin Name: WPC Product Timer for WooCommerce
 Plugin URI: https://wpclever.net/
 Description: WPC Product Timer helps you add many actions for the product based on the conditionals of the time.
-Version: 5.3.2
+Version: 5.4.0
 Author: WPClever
 Author URI: https://wpclever.net
 Text Domain: woo-product-timer
@@ -12,14 +12,14 @@ Requires Plugins: woocommerce
 Requires at least: 4.0
 Tested up to: 6.9
 WC requires at least: 3.0
-WC tested up to: 10.6
+WC tested up to: 10.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'WOOPT_VERSION' ) && define( 'WOOPT_VERSION', '5.3.2' );
+! defined( 'WOOPT_VERSION' ) && define( 'WOOPT_VERSION', '5.4.0' );
 ! defined( 'WOOPT_LITE' ) && define( 'WOOPT_LITE', __FILE__ );
 ! defined( 'WOOPT_FILE' ) && define( 'WOOPT_FILE', __FILE__ );
 ! defined( 'WOOPT_URI' ) && define( 'WOOPT_URI', plugin_dir_url( __FILE__ ) );
@@ -52,6 +52,9 @@ if ( ! function_exists( 'woopt_init' ) ) {
                 public static $features = [];
                 protected static $capabilities = [];
                 protected static $instance = null;
+                protected static $product_actions_cache = [];
+                protected static $parsed_global_actions = null;
+                protected static $now = null;
 
                 public static function instance() {
                     if ( is_null( self::$instance ) ) {
@@ -347,6 +350,52 @@ if ( ! function_exists( 'woopt_init' ) ) {
                     return $timer_data;
                 }
 
+                /**
+                 * Get pre-parsed global actions (lazy-loaded, cached per request).
+                 */
+                protected static function get_parsed_global_actions() {
+                    if ( self::$parsed_global_actions === null ) {
+                        self::$parsed_global_actions = array_map( [
+                                __CLASS__,
+                                'woopt_action_data'
+                        ], self::$global_actions );
+                    }
+
+                    return self::$parsed_global_actions;
+                }
+
+                /**
+                 * Get product actions meta with runtime cache.
+                 */
+                protected static function get_product_actions_meta( $product_id ) {
+                    if ( ! isset( self::$product_actions_cache[ $product_id ] ) ) {
+                        $actions                                    = get_post_meta( $product_id, 'woopt_actions', true );
+                        self::$product_actions_cache[ $product_id ] = is_array( $actions ) ? $actions : [];
+                    }
+
+                    return self::$product_actions_cache[ $product_id ];
+                }
+
+                /**
+                 * Get pre-computed current time values (cached per request).
+                 */
+                protected static function get_now() {
+                    if ( self::$now === null ) {
+                        self::$now = [
+                                'date'      => current_time( 'm/d/Y' ),
+                                'datetime'  => current_time( 'm/d/Y h:i a' ),
+                                'day'       => (int) current_time( 'd' ),
+                                'weekday'   => strtolower( current_time( 'D' ) ),
+                                'week'      => (int) current_time( 'W' ),
+                                'monthday'  => strtolower( current_time( 'j' ) ),
+                                'month'     => (int) current_time( 'm' ),
+                                'timestamp' => current_time( 'U' ),
+                        ];
+                    }
+
+                    return self::$now;
+                }
+
                 public static function woopt_check_apply( $product, $apply, $apply_val, $is_variation = false ) {
                     $product_id = 0;
 
@@ -478,6 +527,8 @@ if ( ! function_exists( 'woopt_init' ) ) {
                     $check = true;
 
                     if ( ! empty( $timer ) ) {
+                        $now = self::get_now();
+
                         foreach ( $timer as $time ) {
                             $check_item = false;
                             $time_type  = isset( $time['type'] ) ? trim( $time['type'] ) : '';
@@ -490,7 +541,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                     if ( count( $date_range ) === 2 ) {
                                         $date_range_start = trim( $date_range[0] );
                                         $date_range_end   = trim( $date_range[1] );
-                                        $current_date     = strtotime( current_time( 'm/d/Y' ) );
+                                        $current_date     = strtotime( $now['date'] );
 
                                         if ( $current_date >= strtotime( $date_range_start ) && $current_date <= strtotime( $date_range_end ) ) {
                                             $check_item = true;
@@ -498,7 +549,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                     } elseif ( count( $date_range ) === 1 ) {
                                         $date_range_start = trim( $date_range[0] );
 
-                                        if ( strtotime( current_time( 'm/d/Y' ) ) === strtotime( $date_range_start ) ) {
+                                        if ( strtotime( $now['date'] ) === strtotime( $date_range_start ) ) {
                                             $check_item = true;
                                         }
                                     }
@@ -507,43 +558,43 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                 case 'date_multi':
                                     $multiple_dates_arr = array_map( 'trim', explode( ', ', $time_value ) );
 
-                                    if ( in_array( current_time( 'm/d/Y' ), $multiple_dates_arr ) ) {
+                                    if ( in_array( $now['date'], $multiple_dates_arr ) ) {
                                         $check_item = true;
                                     }
 
                                     break;
                                 case 'date_even':
-                                    if ( (int) current_time( 'd' ) % 2 === 0 ) {
+                                    if ( $now['day'] % 2 === 0 ) {
                                         $check_item = true;
                                     }
 
                                     break;
                                 case 'date_odd':
-                                    if ( (int) current_time( 'd' ) % 2 !== 0 ) {
+                                    if ( $now['day'] % 2 !== 0 ) {
                                         $check_item = true;
                                     }
 
                                     break;
                                 case 'date_on':
-                                    if ( strtotime( current_time( 'm/d/Y' ) ) === strtotime( $time_value ) ) {
+                                    if ( strtotime( $now['date'] ) === strtotime( $time_value ) ) {
                                         $check_item = true;
                                     }
 
                                     break;
                                 case 'date_before':
-                                    if ( strtotime( current_time( 'm/d/Y' ) ) < strtotime( $time_value ) ) {
+                                    if ( strtotime( $now['date'] ) < strtotime( $time_value ) ) {
                                         $check_item = true;
                                     }
 
                                     break;
                                 case 'date_after':
-                                    if ( strtotime( current_time( 'm/d/Y' ) ) > strtotime( $time_value ) ) {
+                                    if ( strtotime( $now['date'] ) > strtotime( $time_value ) ) {
                                         $check_item = true;
                                     }
 
                                     break;
                                 case 'date_time_before':
-                                    $current_time = current_time( 'm/d/Y h:i a' );
+                                    $current_time = $now['datetime'];
 
                                     if ( strtotime( $current_time ) < strtotime( $time_value ) ) {
                                         $check_item = true;
@@ -551,7 +602,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
 
                                     break;
                                 case 'date_time_after':
-                                    $current_time = current_time( 'm/d/Y h:i a' );
+                                    $current_time = $now['datetime'];
 
                                     if ( strtotime( $current_time ) > strtotime( $time_value ) ) {
                                         $check_item = true;
@@ -562,8 +613,8 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                     $time_range = array_map( 'trim', explode( '-', $time_value ) );
 
                                     if ( count( $time_range ) === 2 ) {
-                                        $current_time     = strtotime( current_time( 'm/d/Y h:i a' ) );
-                                        $current_date     = current_time( 'm/d/Y' );
+                                        $current_time     = strtotime( $now['datetime'] );
+                                        $current_date     = $now['date'];
                                         $time_range_start = $current_date . ' ' . $time_range[0];
                                         $time_range_end   = $current_date . ' ' . $time_range[1];
 
@@ -574,8 +625,8 @@ if ( ! function_exists( 'woopt_init' ) ) {
 
                                     break;
                                 case 'time_before':
-                                    $current_time = current_time( 'm/d/Y h:i a' );
-                                    $current_date = current_time( 'm/d/Y' );
+                                    $current_time = $now['datetime'];
+                                    $current_date = $now['date'];
 
                                     if ( strtotime( $current_time ) < strtotime( $current_date . ' ' . $time_value ) ) {
                                         $check_item = true;
@@ -583,8 +634,8 @@ if ( ! function_exists( 'woopt_init' ) ) {
 
                                     break;
                                 case 'time_after':
-                                    $current_time = current_time( 'm/d/Y h:i a' );
-                                    $current_date = current_time( 'm/d/Y' );
+                                    $current_time = $now['datetime'];
+                                    $current_date = $now['date'];
 
                                     if ( strtotime( $current_time ) > strtotime( $current_date . ' ' . $time_value ) ) {
                                         $check_item = true;
@@ -592,37 +643,37 @@ if ( ! function_exists( 'woopt_init' ) ) {
 
                                     break;
                                 case 'weekly_every':
-                                    if ( strtolower( current_time( 'D' ) ) === $time_value ) {
+                                    if ( $now['weekday'] === $time_value ) {
                                         $check_item = true;
                                     }
 
                                     break;
                                 case 'week_even':
-                                    if ( (int) current_time( 'W' ) % 2 === 0 ) {
+                                    if ( $now['week'] % 2 === 0 ) {
                                         $check_item = true;
                                     }
 
                                     break;
                                 case 'week_odd':
-                                    if ( (int) current_time( 'W' ) % 2 !== 0 ) {
+                                    if ( $now['week'] % 2 !== 0 ) {
                                         $check_item = true;
                                     }
 
                                     break;
                                 case 'week_no':
-                                    if ( (int) current_time( 'W' ) === (int) $time_value ) {
+                                    if ( $now['week'] === (int) $time_value ) {
                                         $check_item = true;
                                     }
 
                                     break;
                                 case 'monthly_every':
-                                    if ( strtolower( current_time( 'j' ) ) === $time_value ) {
+                                    if ( $now['monthday'] === $time_value ) {
                                         $check_item = true;
                                     }
 
                                     break;
                                 case 'month_no':
-                                    if ( (int) current_time( 'm' ) === (int) $time_value ) {
+                                    if ( $now['month'] === (int) $time_value ) {
                                         $check_item = true;
                                     }
 
@@ -630,7 +681,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                 case 'days_less_published':
                                     $published = get_the_time( 'U', $product_id );
 
-                                    if ( ( current_time( 'U' ) - $published ) < 60 * 60 * 24 * (int) $time_value ) {
+                                    if ( ( $now['timestamp'] - $published ) < 60 * 60 * 24 * (int) $time_value ) {
                                         $check_item = true;
                                     }
 
@@ -638,7 +689,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                 case 'days_greater_published':
                                     $published = get_the_time( 'U', $product_id );
 
-                                    if ( ( current_time( 'U' ) - $published ) > 60 * 60 * 24 * (int) $time_value ) {
+                                    if ( ( $now['timestamp'] - $published ) > 60 * 60 * 24 * (int) $time_value ) {
                                         $check_item = true;
                                     }
 
@@ -649,7 +700,10 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                     break;
                             }
 
-                            $check &= $check_item;
+                            // Early return: if any condition fails, skip remaining checks
+                            if ( ! $check_item ) {
+                                return apply_filters( 'woopt_check_timer', false, $timer, $product_id );
+                            }
                         }
                     }
 
@@ -725,7 +779,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
                     }
 
                     // product actions
-                    $actions = get_post_meta( $product_id, 'woopt_actions', true );
+                    $actions = self::get_product_actions_meta( $product_id );
 
                     if ( is_array( $actions ) && ( count( $actions ) > 0 ) ) {
                         foreach ( array_reverse( $actions ) as $action ) {
@@ -816,7 +870,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
                     }
 
                     // product actions
-                    $actions = get_post_meta( $product_id, 'woopt_actions', true );
+                    $actions = self::get_product_actions_meta( $product_id );
 
                     if ( is_array( $actions ) && ( count( $actions ) > 0 ) ) {
                         foreach ( $actions as $action ) {
@@ -906,7 +960,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
                     }
 
                     // product actions
-                    $actions = get_post_meta( $product_id, 'woopt_actions', true );
+                    $actions = self::get_product_actions_meta( $product_id );
 
                     if ( is_array( $actions ) && ( count( $actions ) > 0 ) ) {
                         foreach ( array_reverse( $actions ) as $action ) {
@@ -1006,7 +1060,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
                     }
 
                     // product actions
-                    $actions = get_post_meta( $product_id, 'woopt_actions', true );
+                    $actions = self::get_product_actions_meta( $product_id );
 
                     if ( is_array( $actions ) && ( count( $actions ) > 0 ) ) {
                         foreach ( array_reverse( $actions ) as $action ) {
@@ -1152,7 +1206,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
                     }
 
                     // product actions
-                    $actions = get_post_meta( $product_id, 'woopt_actions', true );
+                    $actions = self::get_product_actions_meta( $product_id );
 
                     if ( is_array( $actions ) && ( count( $actions ) > 0 ) ) {
                         foreach ( array_reverse( $actions ) as $action ) {
@@ -1248,7 +1302,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
                     }
 
                     // product actions
-                    $actions = get_post_meta( $product_id, 'woopt_actions', true );
+                    $actions = self::get_product_actions_meta( $product_id );
 
                     if ( is_array( $actions ) && ( count( $actions ) > 0 ) ) {
                         foreach ( array_reverse( $actions ) as $action ) {
@@ -1333,7 +1387,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
 
                 function last_saved( $value, $option ) {
                     if ( $option == 'woopt_settings' ) {
-                        $value['_last_saved']    = current_time( 'timestamp' );
+                        $value['_last_saved']    = time();
                         $value['_last_saved_by'] = get_current_user_id();
                     }
 
@@ -1368,7 +1422,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
                             <a class="wpclever_settings_page_header_logo" href="https://wpclever.net/"
                                target="_blank" title="Visit wpclever.net"></a>
                             <div class="wpclever_settings_page_header_text">
-                                <div class="wpclever_settings_page_title"><?php echo esc_html__( 'WPC Product Timer', 'woo-product-timer' ) . ' ' . esc_html( WOOPT_VERSION ) . ' ' . ( defined( 'WOOPT_PREMIUM' ) ? '<span class="premium" style="display: none">' . esc_html__( 'Premium', 'woo-product-timer' ) . '</span>' : '' ); ?></div>
+                                <div class="wpclever_settings_page_title"><?php echo esc_html__( 'WPC Product Timer', 'woo-product-timer' ) . ' ' . esc_html( WOOPT_VERSION ) . ' ' . ( defined( 'WOOPT_PREMIUM' ) ? '<span class="premium">' . esc_html__( 'Premium', 'woo-product-timer' ) . '</span>' : '' ); ?></div>
                                 <div class="wpclever_settings_page_desc about-text">
                                     <p>
                                         <?php printf( /* translators: stars */ esc_html__( 'Thank you for using our plugin! If you are satisfied, please reward it a full five-star %s rating.', 'woo-product-timer' ), '<span style="color:#ffb900">&#9733;&#9733;&#9733;&#9733;&#9733;</span>' ); ?>
@@ -1424,8 +1478,6 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                     </p>
                                 </div>
                             <?php } elseif ( $active_tab === 'global' ) {
-                                // delete product transients to refresh variable prices
-                                wc_delete_product_transients();
                                 ?>
                                 <form method="post" action="options.php">
                                     <table class="form-table">
@@ -1493,10 +1545,10 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                                 <?php esc_html_e( 'Current time', 'woo-product-timer' ); ?>
                                             </th>
                                             <td>
-                                                <code><?php echo current_time( 'l' ); ?></code>
+                                                <code><?php echo esc_html( current_time( 'l' ) ); ?></code>
                                                 <code><?php echo esc_html( current_time( 'm/d/Y' ) ); ?></code>
                                                 <code><?php echo esc_html( current_time( 'h:i a' ) ); ?></code>
-                                                <code><?php echo esc_html__( 'Week No.', 'woo-product-timer' ) . ' ' . current_time( 'W' ); ?></code>
+                                                <code><?php echo esc_html__( 'Week No.', 'woo-product-timer' ) . ' ' . esc_html( current_time( 'W' ) ); ?></code>
                                                 <a href="<?php echo esc_url( admin_url( 'options-general.php' ) ); ?>"
                                                    target="_blank"><?php esc_html_e( 'Date/time settings', 'woo-product-timer' ); ?></a>
                                             </td>
@@ -1601,9 +1653,13 @@ if ( ! function_exists( 'woopt_init' ) ) {
                 }
 
                 function admin_menu_content_global() {
-                    if ( isset( $_POST['woopt_actions'] ) ) {
-                        update_option( 'woopt_actions', self::sanitize_array( $_POST['woopt_actions'] ) );
-                        self::$global_actions = (array) get_option( 'woopt_actions', [] );
+                    if ( isset( $_POST['woopt_actions'] ) && check_admin_referer( 'woopt_global_timer' ) ) {
+                        update_option( 'woopt_actions', self::sanitize_array( wp_unslash( $_POST['woopt_actions'] ) ) );
+                        self::$global_actions        = (array) get_option( 'woopt_actions', [] );
+                        self::$parsed_global_actions = null;
+
+                        // Refresh variable prices after global timer changes
+                        wc_delete_product_transients();
                     }
                     ?>
                     <div class="wpclever_settings_page wrap">
@@ -1611,7 +1667,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
                             <a class="wpclever_settings_page_header_logo" href="https://wpclever.net/"
                                target="_blank" title="Visit wpclever.net"></a>
                             <div class="wpclever_settings_page_header_text">
-                                <div class="wpclever_settings_page_title"><?php echo esc_html__( 'WPC Product Timer', 'woo-product-timer' ) . ' ' . esc_html( WOOPT_VERSION ) . ' ' . ( defined( 'WOOPT_PREMIUM' ) ? '<span class="premium" style="display: none">' . esc_html__( 'Premium', 'woo-product-timer' ) . '</span>' : '' ); ?></div>
+                                <div class="wpclever_settings_page_title"><?php echo esc_html__( 'WPC Product Timer', 'woo-product-timer' ) . ' ' . esc_html( WOOPT_VERSION ) . ' ' . ( defined( 'WOOPT_PREMIUM' ) ? '<span class="premium">' . esc_html__( 'Premium', 'woo-product-timer' ) . '</span>' : '' ); ?></div>
                                 <div class="wpclever_settings_page_desc about-text">
                                     <p>
                                         <?php printf( /* translators: stars */ esc_html__( 'Thank you for using our plugin! If you are satisfied, please reward it a full five-star %s rating.', 'woo-product-timer' ), '<span style="color:#ffb900">&#9733;&#9733;&#9733;&#9733;&#9733;</span>' ); ?>
@@ -1640,16 +1696,17 @@ if ( ! function_exists( 'woopt_init' ) ) {
                         </div>
                         <div class="wpclever_settings_page_content">
                             <form method="post" action="">
+                                <?php wp_nonce_field( 'woopt_global_timer' ); ?>
                                 <table class="form-table">
                                     <tr>
                                         <th>
                                             <?php esc_html_e( 'Current time', 'woo-product-timer' ); ?>
                                         </th>
                                         <td>
-                                            <code><?php echo current_time( 'l' ); ?></code>
+                                            <code><?php echo esc_html( current_time( 'l' ) ); ?></code>
                                             <code><?php echo esc_html( current_time( 'm/d/Y' ) ); ?></code>
                                             <code><?php echo esc_html( current_time( 'h:i a' ) ); ?></code>
-                                            <code><?php echo esc_html__( 'Week No.', 'woo-product-timer' ) . ' ' . current_time( 'W' ); ?></code>
+                                            <code><?php echo esc_html__( 'Week No.', 'woo-product-timer' ) . ' ' . esc_html( current_time( 'W' ) ); ?></code>
                                             <a href="<?php echo esc_url( admin_url( 'options-general.php' ) ); ?>"
                                                target="_blank"><?php esc_html_e( 'Date/time settings', 'woo-product-timer' ); ?></a>
                                         </td>
@@ -1676,7 +1733,8 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                                        target="_blank" class="button"
                                                        onclick="return confirm('This feature only available in Premium Version!\nBuy it now? Just $29')">
                                                         <?php esc_html_e( '+ Add action', 'woo-product-timer' ); ?>
-                                                    </a> <a href="#" class="woopt_expand_all">
+                                                    </a>
+                                                    <a href="#" class="woopt_expand_all">
                                                         <?php esc_html_e( 'Expand All', 'woo-product-timer' ); ?>
                                                     </a> <a href="#" class="woopt_collapse_all">
                                                         <?php esc_html_e( 'Collapse All', 'woo-product-timer' ); ?>
@@ -1699,6 +1757,20 @@ if ( ! function_exists( 'woopt_init' ) ) {
 
                 function admin_enqueue_scripts( $hook ) {
                     if ( apply_filters( 'woopt_ignore_backend_scripts', false, $hook ) ) {
+                        return null;
+                    }
+
+                    // Only load on product pages and plugin settings
+                    if ( in_array( $hook, [ 'post.php', 'post-new.php', 'edit.php' ], true ) ) {
+                        $screen = get_current_screen();
+
+                        if ( ! $screen || $screen->post_type !== 'product' ) {
+                            return null;
+                        }
+                    } elseif ( ! in_array( $hook, [
+                            'toplevel_page_wpclever-woopt-global',
+                            'wpclever_page_wpclever-woopt',
+                    ], true ) ) {
                         return null;
                     }
 
@@ -1813,10 +1885,10 @@ if ( ! function_exists( 'woopt_init' ) ) {
                         <?php } ?>
                         <div class="woopt_current_time">
                             <?php esc_html_e( 'Current time', 'woo-product-timer' ); ?>
-                            <code><?php echo current_time( 'l' ); ?></code>
+                            <code><?php echo esc_html( current_time( 'l' ) ); ?></code>
                             <code><?php echo esc_html( current_time( 'm/d/Y' ) ); ?></code>
                             <code><?php echo esc_html( current_time( 'h:i a' ) ); ?></code>
-                            <code><?php echo esc_html__( 'Week No.', 'woo-product-timer' ) . ' ' . current_time( 'W' ); ?></code>
+                            <code><?php echo esc_html__( 'Week No.', 'woo-product-timer' ) . ' ' . esc_html( current_time( 'W' ) ); ?></code>
                             <a href="<?php echo esc_url( admin_url( 'options-general.php' ) ); ?>"
                                target="_blank"><?php esc_html_e( 'Date/time settings', 'woo-product-timer' ); ?></a>
                         </div>
@@ -1837,7 +1909,8 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                    target="_blank" class="button"
                                    onclick="return confirm('This feature only available in Premium Version!\nBuy it now? Just $29')">
                                     <?php esc_html_e( '+ Add action', 'woo-product-timer' ); ?>
-                                </a> <a href="#" class="woopt_expand_all">
+                                </a>
+                                <a href="#" class="woopt_expand_all">
                                     <?php esc_html_e( 'Expand All', 'woo-product-timer' ); ?>
                                 </a> <a href="#" class="woopt_collapse_all">
                                     <?php esc_html_e( 'Collapse All', 'woo-product-timer' ); ?>
@@ -1915,7 +1988,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                             $taxonomies = get_object_taxonomies( 'product', 'objects' );
 
                                             foreach ( $taxonomies as $taxonomy ) {
-                                                echo '<option value="apply_' . $taxonomy->name . '" ' . ( $apply === 'apply_' . $taxonomy->name ? 'selected' : '' ) . '>' . $taxonomy->label . '</option>';
+                                                echo '<option value="apply_' . esc_attr( $taxonomy->name ) . '" ' . ( $apply === 'apply_' . $taxonomy->name ? 'selected' : '' ) . '>' . esc_html( $taxonomy->label ) . '</option>';
                                             }
                                             ?>
                                         </select>
@@ -2028,8 +2101,8 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                     <span class="woopt_hide woopt_show_if_set_regularprice woopt_show_if_set_saleprice">
                                         <input class="woopt_price"
                                                name="woopt_actions[<?php echo esc_attr( $key ); ?>][action_val][value]"
-                                               value="<?php echo $price; ?>" type="number" step="any"
-                                               style="width: 80px; float: left"/>
+                                               value="<?php echo esc_attr( $price ); ?>" type="number" step="any"
+                                        />
                                     </span>
                                     <span class="woopt_hide woopt_show_if_set_regularprice woopt_show_if_set_saleprice">
 										<select name="woopt_actions[<?php echo esc_attr( $key ); ?>][action_val][base]"
@@ -2037,7 +2110,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
 											<option value="ps" <?php selected( 'ps', $base ); ?>><?php esc_html_e( '% of sale price', 'woo-product-timer' ); ?></option>
 											<option value="pr" <?php selected( 'pr', $base ); ?> data-set_saleprice="<?php esc_attr_e( '% of regular price', 'woo-product-timer' ); ?>"
                                                     data-set_regularprice="<?php esc_attr_e( '%', 'woo-product-timer' ); ?>"><?php esc_html_e( '% of regular price', 'woo-product-timer' ); ?></option>
-											<option value="fa" <?php selected( 'fa', $base ); ?>><?php echo get_woocommerce_currency_symbol(); ?></option>
+											<option value="fa" <?php selected( 'fa', $base ); ?>><?php echo esc_html( get_woocommerce_currency_symbol() ); ?></option>
 										</select>
 									</span> <span class="woopt_hide woopt_show_if_set_catalog_visibility">
 										<select name="woopt_actions[<?php echo esc_attr( $key ); ?>][action_val][visibility]">
@@ -2090,7 +2163,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                             $roles_arr = [ 'woopt_all' ];
                                         }
 
-                                        echo '<select class="woopt_user_roles_select" multiple="multiple" style="height: 120px" name="woopt_actions[' . esc_attr( $key ) . '][roles][]">';
+                                        echo '<select class="woopt_user_roles_select" multiple="multiple" name="woopt_actions[' . esc_attr( $key ) . '][roles][]">';
                                         echo '<option value="woopt_all" ' . ( in_array( 'woopt_all', $roles_arr ) || in_array( 'all', $roles_arr ) ? 'selected' : '' ) . '>' . esc_html__( 'All', 'woo-product-timer' ) . '</option>';
                                         echo '<option value="woopt_user" ' . ( in_array( 'woopt_user', $roles_arr ) ? 'selected' : '' ) . '>' . esc_html__( 'User (logged in)', 'woo-product-timer' ) . '</option>';
                                         echo '<option value="woopt_guest" ' . ( in_array( 'woopt_guest', $roles_arr ) || in_array( 'guest', $roles_arr ) ? 'selected' : '' ) . '>' . esc_html__( 'Guest (not logged in)', 'woo-product-timer' ) . '</option>';
@@ -2335,15 +2408,15 @@ if ( ! function_exists( 'woopt_init' ) ) {
                         die( 'Permissions check failed!' );
                     }
 
-                    $pid       = $_POST['pid'];
-                    $form_data = $_POST['form_data'];
+                    $pid       = isset( $_POST['pid'] ) ? absint( $_POST['pid'] ) : 0;
+                    $form_data = isset( $_POST['form_data'] ) ? wp_unslash( $_POST['form_data'] ) : '';
 
                     if ( $pid && $form_data ) {
                         $actions = [];
                         parse_str( $form_data, $actions );
 
                         if ( isset( $actions['woopt_actions'] ) ) {
-                            update_post_meta( $pid, 'woopt_actions', $actions['woopt_actions'] );
+                            update_post_meta( $pid, 'woopt_actions', self::sanitize_array( $actions['woopt_actions'] ) );
                         }
                     }
 

@@ -149,6 +149,29 @@
         trigger('change');
   });
 
+  $(document).on('click touch', '.woopt_new_action', function(e) {
+    e.preventDefault();
+    $('.woopt_actions').addClass('woopt_actions_loading');
+
+    var global = $(this).attr('data-global');
+    var data = {
+      action: 'woopt_add_action', global: global, nonce: woopt_vars.nonce,
+    };
+
+    $.post(ajaxurl, data, function(response) {
+      $('.woopt_actions').append(response);
+      woopt_time_picker();
+      woopt_show_action();
+      woopt_show_conditional();
+      woopt_show_apply();
+      woopt_build_label();
+      woopt_terms_init();
+      woopt_user_roles_init();
+      woopt_products_init();
+      $('.woopt_actions').removeClass('woopt_actions_loading');
+    });
+  });
+
   $(document).on('click touch', '.woopt_new_time', function(e) {
     var $timer = $(this).closest('.woopt_action').find('.woopt_timer');
     var data = {

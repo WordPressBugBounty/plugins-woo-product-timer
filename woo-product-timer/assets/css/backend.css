@@ -647,3 +647,18 @@ body.rtl .woopt_actions select {
     padding-right: 10px;
     background-position: left 10px center;
 }
+
+/* Replaced inline styles */
+
+.wpclever_settings_page_title .premium {
+    display: none;
+}
+
+.woopt_actions .woopt_price {
+    width: 80px;
+    float: left;
+}
+
+.woopt_actions .woopt_user_roles_select {
+    height: 120px;
+}
