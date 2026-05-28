@@ -2,9 +2,9 @@
 Contributors: wpclever
 Donate link: https://wpclever.net
 Tags: woocommerce, wpc, timer, schedule
-Tested up to: 6.9
-Version: 5.4.0
-Stable tag: 5.4.0
+Tested up to: 7.0
+Version: 5.4.1
+Stable tag: 5.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -134,6 +134,10 @@ Being able to tackle even the most complicated series of actions with complex us
 4. When adding/editing the product, you can choose the "Timer" tab, then add action and time conditional
 
 == Changelog ==
+
+= 5.4.1 =
+* Fixed: Minor CSS/JS issues in the backend
+* Updated: Compatible with WP 7.0 & Woo 10.8
 
 = 5.4.0 =
 * Updated: Optimize the code for better performance

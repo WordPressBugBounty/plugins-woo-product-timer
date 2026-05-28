@@ -3,23 +3,23 @@
 Plugin Name: WPC Product Timer for WooCommerce
 Plugin URI: https://wpclever.net/
 Description: WPC Product Timer helps you add many actions for the product based on the conditionals of the time.
-Version: 5.4.0
+Version: 5.4.1
 Author: WPClever
 Author URI: https://wpclever.net
 Text Domain: woo-product-timer
 Domain Path: /languages/
 Requires Plugins: woocommerce
 Requires at least: 4.0
-Tested up to: 6.9
+Tested up to: 7.0
 WC requires at least: 3.0
-WC tested up to: 10.7
+WC tested up to: 10.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'WOOPT_VERSION' ) && define( 'WOOPT_VERSION', '5.4.0' );
+! defined( 'WOOPT_VERSION' ) && define( 'WOOPT_VERSION', '5.4.1' );
 ! defined( 'WOOPT_LITE' ) && define( 'WOOPT_LITE', __FILE__ );
 ! defined( 'WOOPT_FILE' ) && define( 'WOOPT_FILE', __FILE__ );
 ! defined( 'WOOPT_URI' ) && define( 'WOOPT_URI', plugin_dir_url( __FILE__ ) );
@@ -29,12 +29,14 @@ defined( 'ABSPATH' ) || exit;
 ! defined( 'WOOPT_REVIEWS' ) && define( 'WOOPT_REVIEWS', 'https://wordpress.org/support/plugin/woo-product-timer/reviews/' );
 ! defined( 'WOOPT_CHANGELOG' ) && define( 'WOOPT_CHANGELOG', 'https://wordpress.org/plugins/woo-product-timer/#developers' );
 ! defined( 'WOOPT_DISCUSSION' ) && define( 'WOOPT_DISCUSSION', 'https://wordpress.org/support/plugin/woo-product-timer' );
-! defined( 'WPC_URI' ) && define( 'WPC_URI', WOOPT_URI );
 
-include 'includes/log/wpc-log.php';
-include 'includes/dashboard/wpc-dashboard.php';
-include 'includes/kit/wpc-kit.php';
-include 'includes/hpos.php';
+// WPC Core
+require_once __DIR__ . '/includes/wpc-core/wpc-core.php';
+wpc_core_register( [
+	'file'    => __FILE__,
+	'version' => WOOPT_VERSION,
+	'prefix'  => 'woopt',
+] );
 
 if ( ! function_exists( 'woopt_init' ) ) {
     add_action( 'plugins_loaded', 'woopt_init', 11 );
@@ -1984,7 +1986,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                             <option value="apply_product" <?php selected( $apply, 'apply_product' ); ?>><?php esc_html_e( 'Selected products', 'woo-product-timer' ); ?></option>
                                             <option value="apply_combination" <?php selected( $apply, 'apply_combination' ); ?>><?php esc_html_e( 'Combined sources', 'woo-product-timer' ); ?></option>
                                             <?php
-                                            //$taxonomies = get_taxonomies( [ 'object_type' => [ 'product' ] ], 'objects' );
+                                            
                                             $taxonomies = get_object_taxonomies( 'product', 'objects' );
 
                                             foreach ( $taxonomies as $taxonomy ) {
@@ -2203,7 +2205,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
 	                                    <option value="variation" <?php selected( $combination_item_type, 'variation' ); ?>><?php esc_html_e( 'Variations only', 'woo-product-timer' ); ?></option>
 	                                    <option value="not_variation" <?php selected( $combination_item_type, 'not_variation' ); ?>><?php esc_html_e( 'Non-variation products', 'woo-product-timer' ); ?></option>
                                         <?php
-                                        $taxonomies = get_object_taxonomies( 'product', 'objects' ); //$taxonomies = get_taxonomies( [ 'object_type' => [ 'product' ] ], 'objects' );
+                                        $taxonomies = get_object_taxonomies( 'product', 'objects' ); 
 
                                         foreach ( $taxonomies as $taxonomy ) {
                                             echo '<option value="' . esc_attr( $taxonomy->name ) . '" ' . ( $combination_item_type === $taxonomy->name ? 'selected' : '' ) . '>' . esc_html( $taxonomy->label ) . '</option>';
