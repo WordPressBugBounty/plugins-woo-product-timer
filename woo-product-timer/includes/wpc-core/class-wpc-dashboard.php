@@ -127,7 +127,7 @@ if ( ! class_exists( 'WPCleverDashboard' ) ) {
         }
 
         function ajax_get_plugins() {
-            if ( ! isset( $_POST['security'] ) || ! wp_verify_nonce( sanitize_key( $_POST['security'] ), 'wpc_dashboard' ) ) {
+            if ( ! isset( $_POST['security'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['security'] ) ), 'wpc_dashboard' ) ) {
                 die( 'Permissions check failed!' );
             }
 
@@ -203,7 +203,7 @@ if ( ! class_exists( 'WPCleverDashboard' ) ) {
         }
 
         function ajax_get_suggestion() {
-            if ( ! isset( $_POST['security'] ) || ! wp_verify_nonce( sanitize_key( $_POST['security'] ), 'wpc_dashboard' ) ) {
+            if ( ! isset( $_POST['security'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['security'] ) ), 'wpc_dashboard' ) ) {
                 die( 'Permissions check failed!' );
             }
 
@@ -274,7 +274,7 @@ if ( ! class_exists( 'WPCleverDashboard' ) ) {
         }
 
         function ajax_export() {
-            if ( ! isset( $_POST['security'] ) || ! wp_verify_nonce( sanitize_key( $_POST['security'] ), 'wpc_dashboard' ) || ! current_user_can( 'manage_options' ) ) {
+            if ( ! isset( $_POST['security'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['security'] ) ), 'wpc_dashboard' ) || ! current_user_can( 'manage_options' ) ) {
                 die( 'Permissions check failed!' );
             }
 
@@ -295,7 +295,7 @@ if ( ! class_exists( 'WPCleverDashboard' ) ) {
         }
 
         function ajax_import() {
-            if ( ! isset( $_POST['security'] ) || ! wp_verify_nonce( sanitize_key( $_POST['security'] ), 'wpc_dashboard' ) || ! current_user_can( 'manage_options' ) ) {
+            if ( ! isset( $_POST['security'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['security'] ) ), 'wpc_dashboard' ) || ! current_user_can( 'manage_options' ) ) {
                 die( 'Permissions check failed!' );
             }
 

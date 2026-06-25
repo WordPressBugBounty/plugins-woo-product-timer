@@ -49,11 +49,11 @@ if ( ! class_exists( 'WPCleverKit' ) ) {
             }
 
             if ( isset( $_GET['action'], $_GET['plugin'], $_GET['_wpnonce'] ) && ( $_GET['action'] === 'activate' ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'activate-plugin_' . sanitize_text_field( wp_unslash( $_GET['plugin'] ) ) ) ) {
-                activate_plugin( sanitize_text_field( wp_unslash( $_GET['plugin'] ) ), '', false, true );
+                activate_plugin( sanitize_text_field( wp_unslash( $_GET['plugin'] ?? '' ) ), '', false, true );
             }
 
             if ( isset( $_GET['action'], $_GET['plugin'], $_GET['_wpnonce'] ) && ( $_GET['action'] === 'deactivate' ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'deactivate-plugin_' . sanitize_text_field( wp_unslash( $_GET['plugin'] ) ) ) ) {
-                deactivate_plugins( sanitize_text_field( wp_unslash( $_GET['plugin'] ) ), '', false, true );
+                deactivate_plugins( sanitize_text_field( wp_unslash( $_GET['plugin'] ?? '' ) ) );
             }
             ?>
             <div class="wpclever_page wrap">
@@ -77,7 +77,7 @@ if ( ! class_exists( 'WPCleverKit' ) ) {
         }
 
         function ajax_get_essential_kit() {
-            if ( ! isset( $_POST['security'] ) || ! wp_verify_nonce( sanitize_key( $_POST['security'] ), 'wpc_kit' ) ) {
+            if ( ! isset( $_POST['security'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['security'] ) ), 'wpc_kit' ) ) {
                 die( 'Permissions check failed!' );
             }
 

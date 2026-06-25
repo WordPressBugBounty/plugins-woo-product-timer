@@ -3,13 +3,13 @@
 Plugin Name: WPC Product Timer for WooCommerce
 Plugin URI: https://wpclever.net/
 Description: WPC Product Timer helps you add many actions for the product based on the conditionals of the time.
-Version: 5.4.1
+Version: 5.4.2
 Author: WPClever
 Author URI: https://wpclever.net
 Text Domain: woo-product-timer
 Domain Path: /languages/
 Requires Plugins: woocommerce
-Requires at least: 4.0
+Requires at least: 5.9
 Tested up to: 7.0
 WC requires at least: 3.0
 WC tested up to: 10.8
@@ -19,7 +19,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'WOOPT_VERSION' ) && define( 'WOOPT_VERSION', '5.4.1' );
+! defined( 'WOOPT_VERSION' ) && define( 'WOOPT_VERSION', '5.4.2' );
 ! defined( 'WOOPT_LITE' ) && define( 'WOOPT_LITE', __FILE__ );
 ! defined( 'WOOPT_FILE' ) && define( 'WOOPT_FILE', __FILE__ );
 ! defined( 'WOOPT_URI' ) && define( 'WOOPT_URI', plugin_dir_url( __FILE__ ) );
@@ -1365,8 +1365,6 @@ if ( ! function_exists( 'woopt_init' ) ) {
                 }
 
                 function init() {
-                    // load text-domain
-                    load_plugin_textdomain( 'woo-product-timer', false, basename( WOOPT_DIR ) . '/languages/' );
 
                     self::$capabilities = apply_filters( 'woopt_global_timer_capabilities', self::$capabilities );
                 }
@@ -1417,7 +1415,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
                 }
 
                 function admin_menu_content() {
-                    $active_tab = isset( $_GET['tab'] ) ? sanitize_key( $_GET['tab'] ) : 'global';
+                    $active_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ?? '' ) ) : 'global'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
                     ?>
                     <div class="wpclever_settings_page wrap">
                         <div class="wpclever_settings_page_header">
@@ -1441,7 +1439,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
                             </div>
                         </div>
                         <h2></h2>
-                        <?php if ( isset( $_GET['settings-updated'] ) && $_GET['settings-updated'] ) { ?>
+                        <?php if ( isset( $_GET['settings-updated'] ) && sanitize_text_field( wp_unslash( $_GET['settings-updated'] ?? '' ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>
                             <div class="notice notice-success is-dismissible">
                                 <p><?php esc_html_e( 'Settings updated.', 'woo-product-timer' ); ?></p>
                             </div>
@@ -1655,8 +1653,9 @@ if ( ! function_exists( 'woopt_init' ) ) {
                 }
 
                 function admin_menu_content_global() {
+                    // phpcs:ignore WordPress.Security.NonceVerification.Missing
                     if ( isset( $_POST['woopt_actions'] ) && check_admin_referer( 'woopt_global_timer' ) ) {
-                        update_option( 'woopt_actions', self::sanitize_array( wp_unslash( $_POST['woopt_actions'] ) ) );
+                        update_option( 'woopt_actions', self::sanitize_array( map_deep( wp_unslash( $_POST['woopt_actions'] ?? [] ), 'sanitize_text_field' ) ) );
                         self::$global_actions        = (array) get_option( 'woopt_actions', [] );
                         self::$parsed_global_actions = null;
 
@@ -1777,7 +1776,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
                     }
 
                     // wpcdpk
-                    wp_enqueue_style( 'wpcdpk', WOOPT_URI . 'assets/libs/wpcdpk/css/datepicker.css' );
+                    wp_enqueue_style( 'wpcdpk', WOOPT_URI . 'assets/libs/wpcdpk/css/datepicker.css', [], WOOPT_VERSION );
                     wp_enqueue_script( 'wpcdpk', WOOPT_URI . 'assets/libs/wpcdpk/js/datepicker.js', [ 'jquery' ], WOOPT_VERSION, true );
 
                     // backend
@@ -2378,14 +2377,14 @@ if ( ! function_exists( 'woopt_init' ) ) {
 						</span> <span class="woopt_hide woopt_show_if_monthday">
 							<select class="woopt_monthday">
                                 <?php for ( $i = 1; $i < 32; $i ++ ) {
-                                    echo '<option value="' . esc_attr( $i ) . '" ' . ( (int) $monthday === $i ? 'selected' : '' ) . '>' . $i . '</option>';
+                                    echo '<option value="' . esc_attr( $i ) . '" ' . ( (int) $monthday === $i ? 'selected' : '' ) . '>' . absint( $i ) . '</option>';
                                 } ?>
                             </select>
 						</span> <span class="woopt_hide woopt_show_if_weekno">
 							<select class="woopt_weekno">
                                 <?php
                                 for ( $i = 1; $i < 54; $i ++ ) {
-                                    echo '<option value="' . esc_attr( $i ) . '" ' . ( (int) $weekno === $i ? 'selected' : '' ) . '>' . $i . '</option>';
+                                    echo '<option value="' . esc_attr( $i ) . '" ' . ( (int) $weekno === $i ? 'selected' : '' ) . '>' . absint( $i ) . '</option>';
                                 }
                                 ?>
                             </select>
@@ -2393,7 +2392,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
 							<select class="woopt_monthno">
                                 <?php
                                 for ( $i = 1; $i < 13; $i ++ ) {
-                                    echo '<option value="' . esc_attr( $i ) . '" ' . ( (int) $monthno === $i ? 'selected' : '' ) . '>' . $i . '</option>';
+                                    echo '<option value="' . esc_attr( $i ) . '" ' . ( (int) $monthno === $i ? 'selected' : '' ) . '>' . absint( $i ) . '</option>';
                                 }
                                 ?>
                             </select>
@@ -2406,19 +2405,20 @@ if ( ! function_exists( 'woopt_init' ) ) {
                 }
 
                 function ajax_save_actions() {
-                    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'woopt-security' ) ) {
+                    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), 'woopt-security' ) ) {
                         die( 'Permissions check failed!' );
                     }
 
-                    $pid       = isset( $_POST['pid'] ) ? absint( $_POST['pid'] ) : 0;
-                    $form_data = isset( $_POST['form_data'] ) ? wp_unslash( $_POST['form_data'] ) : '';
+                    $pid       = isset( $_POST['pid'] ) ? absint( wp_unslash( $_POST['pid'] ?? '' ) ) : 0;
+                    // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+                    $form_data = isset( $_POST['form_data'] ) ? wp_unslash( $_POST['form_data'] ?? '' ) : '';
 
                     if ( $pid && $form_data ) {
                         $actions = [];
                         parse_str( $form_data, $actions );
 
                         if ( isset( $actions['woopt_actions'] ) ) {
-                            update_post_meta( $pid, 'woopt_actions', self::sanitize_array( $actions['woopt_actions'] ) );
+                            update_post_meta( $pid, 'woopt_actions', self::sanitize_array( map_deep( $actions['woopt_actions'], 'sanitize_text_field' ) ) );
                         }
                     }
 
@@ -2426,40 +2426,40 @@ if ( ! function_exists( 'woopt_init' ) ) {
                 }
 
                 function ajax_add_time() {
-                    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'woopt-security' ) ) {
+                    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), 'woopt-security' ) ) {
                         die( 'Permissions check failed!' );
                     }
 
-                    $key = ! empty( $_POST['key'] ) && ! is_numeric( $_POST['key'] ) ? sanitize_key( $_POST['key'] ) : self::generate_key();
+                    $key = ! empty( $_POST['key'] ) && ! is_numeric( $_POST['key'] ) ? sanitize_key( wp_unslash( $_POST['key'] ?? '' ) ) : self::generate_key();
 
                     self::time( $key );
                     wp_die();
                 }
 
                 function ajax_add_apply_combination() {
-                    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'woopt-security' ) ) {
+                    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), 'woopt-security' ) ) {
                         die( 'Permissions check failed!' );
                     }
 
-                    $key = ! empty( $_POST['key'] ) && ! is_numeric( $_POST['key'] ) ? sanitize_key( $_POST['key'] ) : self::generate_key();
+                    $key = ! empty( $_POST['key'] ) && ! is_numeric( $_POST['key'] ) ? sanitize_key( wp_unslash( $_POST['key'] ?? '' ) ) : self::generate_key();
 
                     self::apply_combination( $key );
                     wp_die();
                 }
 
                 function ajax_search_term() {
-                    if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['nonce'] ), 'woopt-security' ) ) {
+                    if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_REQUEST['nonce'] ) ), 'woopt-security' ) ) {
                         die( 'Permissions check failed!' );
                     }
 
                     $return = [];
                     $args   = [
-                            'taxonomy'   => sanitize_text_field( $_REQUEST['taxonomy'] ),
+                            'taxonomy'   => sanitize_text_field( wp_unslash( $_REQUEST['taxonomy'] ?? '' ) ),
                             'orderby'    => 'id',
                             'order'      => 'ASC',
                             'hide_empty' => false,
                             'fields'     => 'all',
-                            'name__like' => sanitize_text_field( $_REQUEST['q'] ),
+                            'name__like' => sanitize_text_field( wp_unslash( $_REQUEST['q'] ?? '' ) ),
                     ];
                     $terms  = get_terms( $args );
 
@@ -2474,8 +2474,9 @@ if ( ! function_exists( 'woopt_init' ) ) {
                 }
 
                 function process_product_meta( $post_id ) {
+                    // phpcs:ignore WordPress.Security.NonceVerification.Missing
                     if ( isset( $_POST['woopt_actions'] ) && is_array( $_POST['woopt_actions'] ) ) {
-                        update_post_meta( $post_id, 'woopt_actions', self::sanitize_array( $_POST['woopt_actions'] ) );
+                        update_post_meta( $post_id, 'woopt_actions', self::sanitize_array( map_deep( wp_unslash( $_POST['woopt_actions'] ?? [] ), 'sanitize_text_field' ) ) );
                     } else {
                         delete_post_meta( $post_id, 'woopt_actions' );
                     }
@@ -2548,16 +2549,16 @@ if ( ! function_exists( 'woopt_init' ) ) {
                 }
 
                 function ajax_edit_timer() {
-                    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'woopt-security' ) ) {
+                    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), 'woopt-security' ) ) {
                         die( 'Permissions check failed!' );
                     }
 
-                    $product_id = absint( $_POST['pid'] );
+                    $product_id = absint( wp_unslash( $_POST['pid'] ?? '' ) );
 
                     if ( $product_id ) {
                         $actions = get_post_meta( $product_id, 'woopt_actions', true );
                         echo '<textarea class="woopt_edit_data" style="width: 100%; height: 200px">' . esc_textarea( ! empty( $actions ) ? wp_json_encode( $actions, JSON_PRETTY_PRINT ) : '' ) . '</textarea>';
-                        echo '<div style="display: flex; align-items: center"><button class="button button-primary woopt_edit_save" data-pid="' . $product_id . '">' . esc_html__( 'Update', 'woo-product-timer' ) . '</button>';
+                        echo '<div style="display: flex; align-items: center"><button class="button button-primary woopt_edit_save" data-pid="' . esc_attr( $product_id ) . '">' . esc_html__( 'Update', 'woo-product-timer' ) . '</button>';
                         echo '<span class="woopt_edit_message" style="margin-left: 10px"></span></div>';
                     }
 
@@ -2565,12 +2566,12 @@ if ( ! function_exists( 'woopt_init' ) ) {
                 }
 
                 function ajax_save_timer() {
-                    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'woopt-security' ) ) {
+                    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), 'woopt-security' ) ) {
                         die( 'Permissions check failed!' );
                     }
 
-                    $product_id = absint( $_POST['pid'] );
-                    $actions    = sanitize_textarea_field( trim( $_POST['actions'] ) );
+                    $product_id = absint( wp_unslash( $_POST['pid'] ?? '' ) );
+                    $actions    = trim( sanitize_textarea_field( wp_unslash( $_POST['actions'] ?? '' ) ) );
 
                     if ( empty( $actions ) ) {
                         delete_post_meta( $product_id, 'woopt_actions' );
