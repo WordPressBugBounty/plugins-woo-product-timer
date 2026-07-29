@@ -3,8 +3,8 @@ Contributors: wpclever
 Donate link: https://wpclever.net
 Tags: woocommerce, wpc, timer, schedule
 Tested up to: 7.0
-Version: 5.4.2
-Stable tag: 5.4.2
+Version: 5.4.3
+Stable tag: 5.4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -126,6 +126,16 @@ There are even more achievable complex date and time combinations with WPC Produ
 
 Being able to tackle even the most complicated series of actions with complex user-defined timeframes, however, WPC Product Timer has a truly intuitive admin interface. There’s no need for users to configure any settings as everything is built-in and ready to use already. Users can start using this plugin right away without the need to go through the documentation. All functions are straight-forward even to beginners.
 
+= Need more features? =
+
+Please try other plugins from us:
+
+- [WPC Smart Compare](https://wordpress.org/plugins/woo-smart-compare/ "WPC Smart Compare")
+- [WPC Smart Quick View](https://wordpress.org/plugins/woo-smart-quick-view/ "WPC Smart Quick View")
+- [WPC Smart Wishlist](https://wordpress.org/plugins/woo-smart-wishlist/ "WPC Smart Wishlist")
+- [WPC Smart Notification](https://wordpress.org/plugins/wpc-smart-notification/ "WPC Smart Notification")
+- [WPC AJAX Add to Cart](https://wordpress.org/plugins/wpc-ajax-add-to-cart/ "WPC AJAX Add to Cart")
+
 == Installation ==
 
 1. Please make sure that you installed WooCommerce
@@ -134,6 +144,10 @@ Being able to tackle even the most complicated series of actions with complex us
 4. When adding/editing the product, you can choose the "Timer" tab, then add action and time conditional
 
 == Changelog ==
+
+= 5.4.3 =
+* Fixed: Minor CSS/JS issues in the backend
+* Updated: Compatible with WP 7.0 & Woo 10.9
 
 = 5.4.2 =
 * Updated: Optimized the code
