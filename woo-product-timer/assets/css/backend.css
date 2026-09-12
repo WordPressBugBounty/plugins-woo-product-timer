@@ -1,3 +1,1067 @@
+/* WPC Product Timer - Admin Styles matching WPC Conditional Shipping & Payments */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --woopt-primary: #10b981;
+    --woopt-primary-dark: #059669;
+    --woopt-primary-light: #ecfdf5;
+    --woopt-border: #e2e8f0;
+    --woopt-bg: #f8fafc;
+    --woopt-text: #1e293b;
+    --woopt-muted: #64748b;
+    --woopt-radius: 10px;
+    --woopt-shadow: 0 1px 3px 0 rgba(0, 0, 0, .1), 0 1px 2px -1px rgba(0, 0, 0, .1);
+    --woopt-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, .1), 0 2px 4px -2px rgba(0, 0, 0, .1);
+
+    /* Standard WPC Aliases */
+    --wpc-primary: var(--woopt-primary);
+    --wpc-primary-dark: var(--woopt-primary-dark);
+    --wpc-primary-light: var(--woopt-primary-light);
+    --wpc-border: var(--woopt-border);
+    --wpc-bg: var(--woopt-bg);
+    --wpc-text: var(--woopt-text);
+    --wpc-muted: var(--woopt-muted);
+    --wpc-radius: var(--woopt-radius);
+    --wpc-shadow: var(--woopt-shadow);
+    --wpc-shadow-md: var(--woopt-shadow-md);
+}
+
+/* ──── Settings Wrap ─────────────────────────────────────────── */
+.woopt-settings-wrap {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    max-width: 960px;
+    margin: 20px auto;
+    color: var(--woopt-text);
+}
+
+/* ──── Header banner ────────────────────────────────────────── */
+.woopt-settings-header {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border-radius: var(--woopt-radius) var(--woopt-radius) 0 0;
+    padding: 28px 32px;
+    box-shadow: var(--woopt-shadow-md);
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+}
+
+.woopt-settings-header::before {
+    content: '';
+    position: absolute;
+    top: -40%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: rgba(255, 255, 255, .04);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.woopt-settings-header .notice,
+.woopt-settings-header .updated {
+    display: none !important;
+}
+
+.woopt-settings-header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    position: relative;
+    z-index: 1;
+}
+
+.woopt-settings-header-inner .notice,
+.woopt-settings-header-inner .updated {
+    display: none !important;
+}
+
+.woopt-header-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.woopt-logo {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, .15);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.woopt-logo svg {
+    width: 32px;
+    height: 32px;
+    fill: none;
+    stroke: #fff;
+}
+
+.woopt-settings-header h1 {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 800;
+    margin: 0 0 4px;
+    padding: 0;
+    line-height: 1.2;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.woopt-settings-header .premium {
+    background: #e11d48;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+
+.woopt-tagline {
+    color: rgba(255, 255, 255, .65);
+    font-size: 13px;
+    margin: 0;
+}
+
+/* ──── Admin Navigation ──────────────────────────────────────── */
+.woopt-admin-nav {
+    background: #fff;
+    border-bottom: 2px solid var(--woopt-border);
+    margin: 0 0 30px 0;
+    border-radius: 0 0 var(--woopt-radius) var(--woopt-radius);
+    padding: 0 10px;
+    box-shadow: var(--woopt-shadow);
+}
+
+.woopt-nav-container {
+    display: flex;
+    margin-bottom: -2px;
+}
+
+.woopt-nav-item {
+    position: relative;
+    padding: 15px 30px;
+    text-decoration: none;
+    color: var(--woopt-muted);
+    font-weight: 600;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.woopt-nav-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background: var(--woopt-primary);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+    border-radius: 3px 3px 0 0;
+}
+
+.woopt-nav-item:hover,
+.woopt-nav-item.active {
+    color: var(--woopt-primary) !important;
+}
+
+.woopt-nav-item:hover::after,
+.woopt-nav-item.active::after {
+    width: 100%;
+}
+
+.woopt-nav-item.wpc-premium {
+    color: #c9356e !important;
+}
+
+.woopt-nav-item.wpc-premium::after {
+    background: #c9356e !important;
+}
+
+/* ──── Cards ─────────────────────────────────────────────────── */
+.woopt-card {
+    background: #fff;
+    border-radius: var(--woopt-radius);
+    border: 1px solid var(--woopt-border);
+    padding: 32px;
+    box-shadow: var(--woopt-shadow);
+    margin-bottom: 24px;
+    transition: box-shadow 0.2s ease;
+}
+
+.woopt-card:hover {
+    box-shadow: var(--woopt-shadow-md);
+}
+
+.woopt-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 16px;
+}
+
+.woopt-card-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0 0 4px;
+    padding: 0;
+    color: var(--woopt-text);
+}
+
+.woopt-card-desc {
+    font-size: 13px;
+    color: var(--woopt-muted);
+    margin: 0;
+}
+
+/* ──── Settings Rows ─────────────────────────────────────────── */
+.woopt-settings-row {
+    display: flex;
+    align-items: flex-start;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--woopt-border);
+    gap: 20px;
+}
+
+.woopt-settings-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.woopt-settings-label {
+    width: 280px;
+    flex: 0 0 280px;
+    padding-top: 4px;
+}
+
+.woopt-settings-label strong {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--woopt-text);
+}
+
+.woopt-settings-field {
+    flex: 1;
+    min-width: 0;
+}
+
+/* ──── Performance Checklist & Current Time ─────────────────── */
+.woopt-checkbox-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.woopt-checkbox-list li label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--woopt-text);
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.woopt-checkbox-list input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    border: 1px solid var(--woopt-border);
+    accent-color: var(--woopt-primary);
+    margin: 0;
+}
+
+.woopt-current-time-badges {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.woopt-current-time-badges code {
+    background: #f1f5f9;
+    border: 1px solid var(--woopt-border);
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 12px;
+    color: var(--woopt-text);
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.woopt-link-btn {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--woopt-primary);
+    text-decoration: none;
+    margin-left: 4px;
+}
+
+.woopt-link-btn:hover {
+    color: var(--woopt-primary-dark);
+    text-decoration: underline;
+}
+
+/* ──── Action Header Tools ───────────────────────────────────── */
+.woopt-card-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.woopt-action-tool-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #f8fafc;
+    border: 1px solid var(--woopt-border);
+    color: var(--woopt-muted);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+    white-space: nowrap;
+    height: 32px;
+    box-sizing: border-box;
+}
+
+.woopt-action-tool-btn:hover {
+    background: #f1f5f9;
+    color: var(--woopt-text);
+    border-color: #cbd5e1;
+}
+
+.woopt-action-tool-btn .dashicons {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
+}
+
+.woopt-import-export-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #fff;
+    border: 1px solid var(--woopt-border);
+    color: var(--woopt-muted);
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: var(--woopt-shadow);
+    white-space: nowrap;
+    height: 32px;
+    box-sizing: border-box;
+}
+
+.woopt-import-export-btn .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+}
+
+.woopt-import-export-btn:hover {
+    border-color: var(--woopt-primary);
+    color: var(--woopt-primary);
+}
+
+/* ──── Submit Row ────────────────────────────────────────────── */
+.woopt-submit-row {
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.woopt-submit-row #submit {
+    background: var(--woopt-primary) !important;
+    border: none !important;
+    padding: 12px 36px !important;
+    height: auto !important;
+    font-weight: 700 !important;
+    border-radius: 8px !important;
+    font-size: 14px !important;
+    box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2) !important;
+    transition: all 0.2s !important;
+    color: #fff !important;
+    cursor: pointer;
+}
+
+.woopt-submit-row #submit:hover {
+    background: var(--woopt-primary-dark) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 12px -1px rgba(16, 185, 129, 0.3) !important;
+}
+
+.woopt-submit-row .wpc-last-saved {
+    color: var(--woopt-muted);
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* ──── Add Rule / Action Button ───────────────────────────────── */
+.woopt-add-rule {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px 20px;
+    background: #fff;
+    border: 2px dashed var(--woopt-border);
+    border-radius: 12px;
+    color: var(--woopt-primary);
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 14px;
+    gap: 8px;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.woopt-add-rule:hover {
+    border-color: var(--woopt-primary);
+    background: var(--woopt-primary-light);
+    color: var(--woopt-primary-dark);
+}
+
+/* ──── Settings Content Text ─────────────────────────────────── */
+.woopt-settings-page-content-text {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--woopt-text);
+}
+
+.woopt-settings-page-content-text p {
+    margin: 0 0 12px;
+    font-size: 13.5px;
+    line-height: 1.6;
+}
+
+.woopt-settings-page-content-text p:last-child {
+    margin-bottom: 0;
+}
+
+.woopt-settings-page-content-text ul {
+    margin: 8px 0 0 18px;
+    padding: 0;
+}
+
+.woopt-settings-page-content-text li {
+    margin-bottom: 6px;
+}
+
+.woopt-settings-page-content-text a {
+    color: var(--woopt-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.woopt-settings-page-content-text a:hover {
+    color: var(--woopt-primary-dark);
+    text-decoration: underline;
+}
+
+/* ──── Modern Rule Overrides in Settings ─────────────────────── */
+.woopt-settings-wrap .woopt_actions {
+    background: transparent;
+    padding: 0;
+    margin-top: 10px;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.woopt-settings-wrap .woopt_actions .woopt_action {
+    background: #fff;
+    border: 1px solid var(--woopt-border);
+    border-radius: 12px;
+    transition: all 0.2s;
+    overflow: visible;
+    margin-bottom: 0;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.woopt-settings-wrap .woopt_actions .woopt_action:hover {
+    border-color: #cbd5e1;
+}
+
+.woopt-settings-wrap .woopt_actions .woopt_action_heading {
+    padding: 14px 20px;
+    background-color: #f8fafc;
+    border-bottom: 1px solid var(--woopt-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 11px 11px 0 0;
+    height: auto;
+    line-height: normal;
+}
+
+.woopt-settings-wrap .woopt_actions .woopt_action.active .woopt_action_heading {
+    background-color: #f1f5f9;
+}
+
+.woopt-settings-wrap .woopt_actions .woopt_action_heading:after {
+    display: none;
+}
+
+.woopt-settings-wrap .woopt_actions .woopt_action_move {
+    cursor: grab;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    margin-right: 8px;
+}
+
+.woopt-settings-wrap .woopt_actions .woopt_action_label {
+    font-weight: 700;
+    color: var(--woopt-text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+}
+
+.woopt-settings-wrap .woopt_actions .woopt_action_label_name {
+    font-weight: 700;
+    color: var(--woopt-text);
+    font-size: 14px;
+}
+
+.woopt-settings-wrap .woopt_actions .woopt_action_label_action,
+.woopt-settings-wrap .woopt_actions .woopt_action_label_apply {
+    font-weight: 600;
+    font-size: 11px;
+    color: #475569;
+    background: #e2e8f0;
+    padding: 3px 8px;
+    border-radius: 6px;
+}
+
+.woopt_summary_btn,
+.woopt_action_heading .woopt_action_summary,
+.woopt-settings-wrap .woopt_actions .woopt_action_summary {
+    color: #8b5cf6;
+    background: #ede9fe;
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    text-decoration: none !important;
+    margin-right: 8px;
+    opacity: 1 !important;
+    visibility: visible !important;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.woopt_summary_btn:hover,
+.woopt_action_heading .woopt_action_summary:hover,
+.woopt-settings-wrap .woopt_actions .woopt_action_summary:hover {
+    background: #8b5cf6;
+    color: #fff;
+}
+
+.woopt_summary_btn svg,
+.woopt_action_summary svg {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    pointer-events: none;
+    display: block;
+}
+
+.woopt_duplicate_btn,
+.woopt_action_heading .woopt_action_duplicate,
+.woopt-settings-wrap .woopt_actions .woopt_action_duplicate {
+    color: #3b82f6;
+    background: #dbeafe;
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    text-decoration: none !important;
+    margin-right: 8px;
+    opacity: 1 !important;
+    visibility: visible !important;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.woopt_duplicate_btn:hover,
+.woopt_action_heading .woopt_action_duplicate:hover,
+.woopt-settings-wrap .woopt_actions .woopt_action_duplicate:hover {
+    background: #3b82f6;
+    color: #fff;
+}
+
+.woopt_duplicate_btn svg,
+.woopt_action_duplicate svg {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    pointer-events: none;
+    display: block;
+}
+
+.woopt_remove_btn,
+.woopt_action_heading .woopt_action_remove,
+.woopt-settings-wrap .woopt_actions .woopt_action_remove {
+    color: #ef4444;
+    background: #fee2e2;
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    text-decoration: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.woopt_remove_btn:hover,
+.woopt_action_heading .woopt_action_remove:hover,
+.woopt-settings-wrap .woopt_actions .woopt_action_remove:hover {
+    background: #ef4444;
+    color: #fff;
+}
+
+.woopt_remove_btn svg,
+.woopt_action_remove svg {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    pointer-events: none;
+    display: block;
+}
+
+/* ──── Tooltips (Hint.css Standard) ───────────────────────── */
+[class*="hint--"] {
+    position: relative;
+    display: inline-flex;
+}
+
+[class*="hint--"]::before,
+[class*="hint--"]::after {
+    position: absolute;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    visibility: hidden;
+    opacity: 0;
+    z-index: 1000000;
+    pointer-events: none;
+    transition: 0.2s ease;
+}
+
+[class*="hint--"]:hover::before,
+[class*="hint--"]:hover::after {
+    visibility: visible;
+    opacity: 1;
+}
+
+[class*="hint--"]::before {
+    content: '';
+    position: absolute;
+    background: transparent;
+    border: 6px solid transparent;
+    z-index: 1000001;
+}
+
+[class*="hint--"]::after {
+    content: attr(aria-label);
+    background: #1e293b;
+    color: #fff;
+    padding: 6px 10px;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 12px;
+    white-space: nowrap;
+    border-radius: 6px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+.hint--top::before {
+    bottom: 100%;
+    left: 50%;
+    margin-bottom: -11px;
+    transform: translateX(-50%);
+    border-top-color: #1e293b;
+}
+
+.hint--top::after {
+    bottom: 100%;
+    left: 50%;
+    margin-bottom: 1px;
+    transform: translateX(-50%);
+}
+
+.hint--top:hover::before {
+    transform: translateX(-50%) translateY(-5px);
+}
+
+.hint--top:hover::after {
+    transform: translateX(-50%) translateY(-5px);
+}
+
+/* ──── Dialog Base ──────────────────────────────────────────── */
+#woopt-summary-modal {
+    display: none;
+}
+
+.woopt-dialog.ui-dialog {
+    border: none;
+    border-radius: 14px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, .25);
+    overflow: hidden;
+    font-family: 'Inter', -apple-system, sans-serif;
+    padding: 0;
+    z-index: 100100 !important;
+}
+
+.woopt-dialog + .ui-widget-overlay {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(2px);
+    z-index: 100099 !important;
+}
+
+.woopt-dialog .ui-dialog-titlebar {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    color: #fff;
+    border: none;
+    border-radius: 0;
+    padding: 18px 24px;
+    padding-right: 56px;
+    font-weight: 700;
+    font-size: 15px;
+    position: relative;
+}
+
+.woopt-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close {
+    position: absolute;
+    color: rgba(255, 255, 255, .6);
+    border: none;
+    background: rgba(255, 255, 255, .1);
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    margin: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    padding: 0;
+    overflow: hidden;
+    font-size: 0;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.woopt-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close .ui-button-icon-space,
+.woopt-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close .ui-button-text {
+    display: none;
+}
+
+.woopt-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close::before {
+    content: '\00d7';
+    font: 400 20px/30px 'Inter', -apple-system, sans-serif;
+    color: rgba(255, 255, 255, .6);
+    width: 30px;
+    height: 30px;
+    display: block;
+    text-align: center;
+}
+
+.woopt-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close:hover {
+    background: rgba(255, 255, 255, .2);
+}
+
+.woopt-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close:hover::before {
+    color: #fff;
+}
+
+.woopt-dialog .ui-dialog-content {
+    padding: 24px !important;
+    background: #fff;
+}
+
+.woopt-dialog .ui-dialog-buttonpane {
+    border-top: 1px solid #e2e8f0;
+    padding: 14px 24px !important;
+    margin: 0;
+    background: #f8fafc;
+}
+
+.woopt-dialog .ui-dialog-buttonset {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.woopt-dialog .ui-dialog-buttonpane .ui-button {
+    background: #10b981;
+    border: none;
+    color: #fff;
+    border-radius: 8px;
+    padding: 8px 24px;
+    height: auto;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.woopt-dialog .ui-dialog-buttonpane .ui-button:hover {
+    background: #059669;
+}
+
+/* ──── Summary Modal Content ────────────────────────────────── */
+.woopt-sum-section {
+    padding: 12px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.woopt-sum-section:first-child {
+    padding-top: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.woopt-sum-section:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.woopt-sum-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 4px 12px;
+    border-radius: 20px;
+}
+
+.woopt-sum-status.active {
+    background: #ecfdf5;
+    color: #059669;
+}
+
+.woopt-sum-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    background: #10b981;
+}
+
+.woopt-sum-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #8b5cf6;
+    background: #ede9fe;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+.woopt-sum-label {
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: #64748b;
+    margin-bottom: 6px;
+}
+
+.woopt-sum-detail {
+    font-size: 14px;
+    color: #1e293b;
+    line-height: 1.5;
+}
+
+.woopt-sum-conditions {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.woopt-sum-condition-item {
+    background: #f8fafc;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 1.5;
+    border: 1px solid #e2e8f0;
+}
+
+.woopt-sum-type {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.woopt-sum-value {
+    color: #059669;
+    font-weight: 500;
+}
+
+.woopt-sum-relation {
+    display: inline-block;
+    font-weight: 700;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: #fff;
+    background: #94a3b8;
+    padding: 1px 6px;
+    border-radius: 4px;
+    margin-right: 4px;
+    vertical-align: middle;
+}
+
+.woopt-settings-wrap .woopt_actions .woopt_action_content {
+    padding: 20px 24px;
+}
+
+.woopt-settings-wrap .woopt_actions .woopt_tr {
+    display: flex;
+    align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--woopt-border);
+    gap: 16px;
+}
+
+.woopt-settings-wrap .woopt_actions .woopt_tr:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.woopt-settings-wrap .woopt_actions .woopt_th {
+    width: 130px;
+    flex: 0 0 130px;
+    font-weight: 600;
+    color: var(--woopt-text);
+    padding-top: 6px;
+    font-size: 13px;
+}
+
+.woopt-settings-wrap .woopt_actions .woopt_td {
+    flex: 1;
+    min-width: 0;
+}
+
+/* ──── Helper Classes to replace inline styles ───────────────── */
+.woopt_input_300 {
+    width: 300px !important;
+    max-width: 100% !important;
+}
+
+.woopt-color-notice {
+    padding: 0 12px;
+    color: #c9356e;
+}
+
+.woopt_edit_data {
+    width: 100%;
+    height: 200px;
+    margin-bottom: 10px;
+}
+
+.woopt_edit_actions_row {
+    display: flex;
+    align-items: center;
+}
+
+.woopt_edit_message {
+    margin-left: 10px;
+}
+
+/* ──── RTL Support ───────────────────────────────────────────── */
+body.rtl .woopt-settings-header h1 {
+    gap: 10px;
+}
+
+body.rtl .woopt_action_heading .woopt_action_move {
+    margin-right: 0;
+    margin-left: 8px;
+}
+
+body.rtl .woopt_action_heading .woopt_action_summary,
+body.rtl .woopt_action_heading .woopt_action_duplicate {
+    margin-right: 0;
+    margin-left: 8px;
+}
+
+body.rtl .woopt-link-btn {
+    margin-left: 0;
+    margin-right: 4px;
+}
+
+body.rtl .woopt_edit_message {
+    margin-left: 0;
+    margin-right: 10px;
+}
+
+body.rtl .woopt_time input,
+body.rtl .woopt_time_input,
+body.rtl .woopt_date_input,
+body.rtl .woopt_date_time_input,
+body.rtl .woopt_actions .woopt_time_input,
+body.rtl .woopt_actions .woopt_date_input,
+body.rtl .woopt_actions .woopt_date_time_input {
+    background-position: calc(100% - 10px) center !important;
+    padding-left: 10px !important;
+    padding-right: 40px !important;
+}
+
+/* ──── Legacy Core Styles ────────────────────────────────────── */
 @keyframes woopt-spinner {
     to {
         transform: rotate(360deg);
@@ -79,7 +1143,6 @@
     line-height: 28px;
     padding: 0 10px;
     margin: 0 5px 0 0;
-    border: 1px solid #ddd;
     box-sizing: border-box;
     background-color: #fff;
     background-repeat: no-repeat;
@@ -89,12 +1152,6 @@
     -webkit-transition: all .2s;
     transition: all .2s;
     -webkit-appearance: none;
-}
-
-.woopt_actions input[type="search"]:hover, .woopt_actions input[type="text"]:hover, .woopt_actions input[type="number"]:hover, .woopt_actions select:hover {
-    -webkit-box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.1);
-    -moz-box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.1);
-    box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.1);
 }
 
 .woopt_actions select:not([multiple="multiple"]) {
@@ -114,40 +1171,6 @@
     float: none !important;
     box-sizing: border-box !important;
     display: inline-block !important;
-}
-
-.woopt_actions .select2-search__field {
-    width: auto !important;
-    min-height: 24px !important;
-    height: 24px !important;
-    line-height: 24px !important;
-    max-width: 100% !important;
-    margin-top: 0 !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-.woopt_actions .select2-container--default .select2-selection--multiple {
-    border: 1px solid #dddddd;
-}
-
-.woopt_actions .select2-selection__rendered {
-    padding: 0 2px !important;
-    display: block !important;
-}
-
-.woopt_actions .select2-selection__rendered li {
-    height: 24px !important;
-    line-height: 22px !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    margin-top: 2px !important;
-    margin-bottom: 2px !important;
-    margin-right: 2px !important;
-}
-
-.woopt_actions .select2-selection__rendered li:last-child {
-    margin-bottom: 0;
 }
 
 .woopt_actions .woopt_action {
@@ -177,7 +1200,6 @@
     height: 40px;
     line-height: 40px;
     padding: 0 40px 0 0;
-    overflow: hidden;
     border: none;
     cursor: pointer;
     -webkit-touch-callout: none;
@@ -252,21 +1274,10 @@
     display: none;
 }
 
-.woopt_action_heading .woopt_action_duplicate, .woopt_action_heading .woopt_action_remove {
-    text-decoration: underline;
-    margin: 0 5px;
-    cursor: pointer;
-    opacity: 0;
-    visibility: hidden;
-}
-
+.woopt_action_heading .woopt_action_duplicate,
 .woopt_action_heading .woopt_action_remove {
-    color: #ff4f3b;
-}
-
-.woopt_action:hover .woopt_action_duplicate, .woopt_action:hover .woopt_action_remove {
-    opacity: 1;
-    visibility: visible;
+    cursor: pointer;
+    text-decoration: none;
 }
 
 .woopt_action_content {
@@ -425,33 +1436,54 @@
     color: #e14d43;
 }
 
-.woopt_actions .woopt_time_input, .woopt_actions .woopt_date_input, .woopt_actions .woopt_date_time_input {
-    padding-left: 40px !important;
+.woopt_time input {
+    background-color: #fff;
+    background-repeat: no-repeat;
+    background-position: 10px center;
 }
 
+.woopt_time_input,
+.woopt_date_input,
+.woopt_date_time_input,
+.woopt_actions .woopt_time_input,
+.woopt_actions .woopt_date_input,
+.woopt_actions .woopt_date_time_input {
+    padding-left: 40px !important;
+    background-color: #fff;
+    background-repeat: no-repeat;
+    background-position: 10px center !important;
+}
+
+.woopt_time_input,
 .woopt_actions .woopt_time_input {
     width: 140px !important;
-    background-image: url('../images/time_bg.jpg');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%2364748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>');
 }
 
+.woopt_date_time_input,
 .woopt_actions .woopt_date_time_input {
     width: 240px !important;
-    background-image: url('../images/time_bg.jpg');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%2364748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>');
 }
 
+.woopt_date_input,
 .woopt_actions .woopt_date_input {
     width: 240px !important;
-    background-image: url('../images/date_bg.jpg');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%2364748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>');
 }
 
+.woopt_time_input:focus,
 .woopt_actions .woopt_time_input:focus {
-    background-image: url('../images/time_hover_bg.jpg');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%232c4b81" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>');
     border-color: #2c4b81 !important;
     box-shadow: none !important;
 }
 
-.woopt_actions .woopt_date_input:focus, .woopt_actions .woopt_date_time_input:focus {
-    background-image: url('../images/date_hover_bg.jpg');
+.woopt_date_input:focus,
+.woopt_date_time_input:focus,
+.woopt_actions .woopt_date_input:focus,
+.woopt_actions .woopt_date_time_input:focus {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%232c4b81" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>');
     border-color: #2c4b81 !important;
     box-shadow: none !important;
 }

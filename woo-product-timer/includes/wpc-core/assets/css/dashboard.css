@@ -157,6 +157,7 @@ body[class*=wpclever_page_] {
 
 .wpc-nav-container {
     display: flex;
+    margin-bottom: -2px;
 }
 
 .wpc-nav-item {

@@ -78,7 +78,8 @@
 
   $(document).on('click touch', '.woopt_action_heading', function(e) {
     if (($(e.target).closest('.woopt_action_duplicate').length === 0) &&
-        ($(e.target).closest('.woopt_action_remove').length === 0)) {
+        ($(e.target).closest('.woopt_action_remove').length === 0) &&
+        ($(e.target).closest('.woopt_action_summary').length === 0)) {
       $(this).closest('.woopt_action').toggleClass('active');
     }
   });
@@ -172,6 +173,37 @@
     });
   });
 
+  $(document).on('click touch', '.woopt_action_duplicate', function(e) {
+    e.preventDefault();
+    $('.woopt_actions').addClass('woopt_actions_loading');
+
+    var $action = $(this).closest('.woopt_action');
+    var form_data = $action.
+        find('input, select, button, textarea').
+        serialize() || 0;
+    var global = $(this).attr('data-global');
+    var data = {
+      action: 'woopt_add_action',
+      global: global,
+      form_data: form_data,
+      nonce: woopt_vars.nonce,
+    };
+
+    $.post(ajaxurl, data, function(response) {
+      $(response).insertAfter($action);
+      woopt_time_picker();
+      woopt_show_action();
+      woopt_show_conditional();
+      woopt_show_apply();
+      woopt_build_label();
+      woopt_terms_init();
+      woopt_apply_terms_init();
+      woopt_user_roles_init();
+      woopt_products_init();
+      $('.woopt_actions').removeClass('woopt_actions_loading');
+    });
+  });
+
   $(document).on('click touch', '.woopt_new_time', function(e) {
     var $timer = $(this).closest('.woopt_action').find('.woopt_timer');
     var data = {
@@ -237,6 +269,176 @@
     if (confirm('Are you sure?')) {
       $(this).closest('.woopt_action').remove();
     }
+  });
+
+  // Action Summary Modal
+  $(document).on('click touch', '.woopt_action_summary', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    var $action = $(this).closest('.woopt_action');
+    var key = $action.data('key');
+    var actionName = $action.find('.woopt_action_name_input').val() || '#' + key;
+
+    // Action details
+    var $actionSelect = $action.find('.woopt_action_selector');
+    var actionVal = $actionSelect.val();
+    var actionText = $actionSelect.find('option:selected').text().trim() || '(No action selected)';
+    var actionExtra = '';
+
+    if (actionVal === 'set_regularprice' || actionVal === 'set_saleprice') {
+      var priceVal = $action.find('.woopt_price').val();
+      var baseText = $action.find('.woopt_action_price_base option:selected').text().trim();
+      if (priceVal) {
+        actionExtra = ' (' + priceVal + ' ' + baseText + ')';
+      }
+    } else if (actionVal === 'set_catalog_visibility') {
+      var visText = $action.find('select[name*="[visibility]"] option:selected').text().trim();
+      if (visText) {
+        actionExtra = ' &rarr; ' + visText;
+      }
+    }
+
+    // Apply for (if global)
+    var isGlobal = $action.find('input[name*="[type]"]').val() === 'global' || $(this).data('global');
+    var applyText = '';
+    var applyDetails = [];
+
+    if (isGlobal && $action.find('.woopt_apply_selector').length) {
+      applyText = $action.find('.woopt_apply_selector option:selected').text().trim();
+      var applyVal = $action.find('.woopt_apply_selector').val();
+
+      if (applyVal === 'apply_product') {
+        $action.find('.woopt-product-search option:selected').each(function() {
+          applyDetails.push($(this).text().trim());
+        });
+      } else if (applyVal === 'apply_combination') {
+        $action.find('.woopt_apply_combination').each(function() {
+          var source = $(this).find('.woopt_apply_source option:selected').text().trim();
+          var val = $(this).find('.woopt_apply_combination_val').val();
+          if (source) {
+            applyDetails.push(source + (val ? ': ' + val : ''));
+          }
+        });
+      } else if (applyVal.indexOf('apply_') === 0 && applyVal !== 'apply_all' && applyVal !== 'apply_variation' && applyVal !== 'apply_not_variation') {
+        $action.find('.woopt_terms option:selected').each(function() {
+          applyDetails.push($(this).text().trim());
+        });
+      }
+    }
+
+    // User Roles
+    var userRoles = [];
+    $action.find('.woopt_user_roles select option:selected').each(function() {
+      userRoles.push($(this).text().trim());
+    });
+
+    // Time conditions
+    var timers = [];
+    $action.find('.woopt_time').each(function() {
+      var $t = $(this);
+      var timeType = $t.find('.woopt_time_type option:selected').text().trim();
+      var timeShow = $t.find('.woopt_time_type option:selected').data('show');
+      var timeVal = '';
+
+      if (timeShow === 'date_time') {
+        timeVal = $t.find('.woopt_date_time_input').val();
+      } else if (timeShow === 'date') {
+        timeVal = $t.find('.woopt_dpk_date').val();
+      } else if (timeShow === 'date_range') {
+        timeVal = $t.find('.woopt_dpk_date_range').val();
+      } else if (timeShow === 'date_multi') {
+        timeVal = $t.find('.woopt_dpk_date_multi').val();
+      } else if (timeShow === 'time_range') {
+        var from = $t.find('.woopt_time_from').val();
+        var to = $t.find('.woopt_time_to').val();
+        timeVal = (from || '') + ' - ' + (to || '');
+      } else if (timeShow === 'time') {
+        timeVal = $t.find('.woopt_time_on').val();
+      } else if (timeShow === 'weekday') {
+        timeVal = $t.find('.woopt_weekday option:selected').text().trim();
+      } else if (timeShow === 'monthday') {
+        timeVal = $t.find('.woopt_monthday option:selected').text().trim();
+      } else if (timeShow === 'weekno') {
+        timeVal = $t.find('.woopt_weekno option:selected').text().trim();
+      } else if (timeShow === 'monthno') {
+        timeVal = $t.find('.woopt_monthno option:selected').text().trim();
+      }
+
+      if (timeType) {
+        var entry = '<span class="woopt-sum-type">' + timeType + '</span>';
+        if (timeVal) {
+          entry += ' <span class="woopt-sum-value">' + timeVal + '</span>';
+        }
+        timers.push(entry);
+      }
+    });
+
+    // Build HTML
+    var html = '<div class="woopt-sum-section">';
+    html += '<div class="woopt-sum-status active"><span class="woopt-sum-dot"></span> Active</div>';
+    html += '<div class="woopt-sum-badge">' + '#' + key + '</div>';
+    html += '</div>';
+
+    html += '<div class="woopt-sum-section">';
+    html += '<div class="woopt-sum-label">Action</div>';
+    html += '<div class="woopt-sum-detail"><strong class="woopt-sum-type">' + actionText + '</strong>' + actionExtra + '</div>';
+    html += '</div>';
+
+    if (isGlobal && applyText) {
+      html += '<div class="woopt-sum-section">';
+      html += '<div class="woopt-sum-label">Apply for</div>';
+      html += '<div class="woopt-sum-detail">' + applyText;
+      if (applyDetails.length > 0) {
+        html += ' (' + applyDetails.join(', ') + ')';
+      }
+      html += '</div></div>';
+    }
+
+    if (timers.length > 0) {
+      html += '<div class="woopt-sum-section">';
+      html += '<div class="woopt-sum-label">Time conditions</div>';
+      html += '<div class="woopt-sum-conditions">';
+      for (var j = 0; j < timers.length; j++) {
+        var tPrefix = j > 0 ? '<span class="woopt-sum-relation">AND</span> ' : '';
+        html += '<div class="woopt-sum-condition-item">' + tPrefix + timers[j] + '</div>';
+      }
+      html += '</div>';
+      html += '</div>';
+    } else {
+      html += '<div class="woopt-sum-section">';
+      html += '<div class="woopt-sum-label">Time conditions</div>';
+      html += '<div class="woopt-sum-detail">(Always active / No conditions set)</div>';
+      html += '</div>';
+    }
+
+    if (userRoles.length > 0) {
+      html += '<div class="woopt-sum-section">';
+      html += '<div class="woopt-sum-label">User roles</div>';
+      html += '<div class="woopt-sum-detail">' + userRoles.join(', ') + '</div>';
+      html += '</div>';
+    }
+
+    if ($('#woopt-summary-modal').length === 0) {
+      $('body').append('<div id="woopt-summary-modal"><div class="woopt-summary-content"></div></div>');
+    }
+
+    $('#woopt-summary-modal').attr('title', actionName).find('.woopt-summary-content').html(html);
+    $('#woopt-summary-modal').dialog({
+      modal: true,
+      width: 520,
+      dialogClass: 'woopt-dialog woopt-summary-dialog',
+      open: function() {
+        $('.ui-widget-overlay').bind('click', function() {
+          $('#woopt-summary-modal').dialog('close');
+        });
+      },
+      buttons: {
+        'Close': function() {
+          $(this).dialog('close');
+        }
+      }
+    });
   });
 
   $(document).on('click touch', '.woopt_expand_all', function(e) {
