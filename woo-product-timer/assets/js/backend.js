@@ -917,4 +917,262 @@
       });
     }
   }
+
+  // ──── Timer Simulator ───────────────────────────────────────
+
+  function woopt_simulator_init() {
+    // Initialize product search selectWoo
+    $('#woopt-sim-product').each(function () {
+      var $this = $(this);
+      if (!$this.hasClass('select2-hidden-accessible')) {
+        $this.selectWoo({
+          ajax: {
+            url: ajaxurl,
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+              return {
+                term: params.term,
+                action: 'woocommerce_json_search_products_and_variations',
+                security: typeof woocommerce_admin_meta_boxes !== 'undefined' ? woocommerce_admin_meta_boxes.search_products_nonce : (typeof woopt_vars !== 'undefined' ? woopt_vars.nonce : '')
+              };
+            },
+            processResults: function (data) {
+              var terms = [];
+              if (data) {
+                $.each(data, function (id, text) {
+                  terms.push({ id: id, text: text });
+                });
+              }
+              return { results: terms };
+            },
+            cache: true
+          },
+          minimumInputLength: 1
+        });
+      }
+    });
+
+    // Initialize datetime picker on simulator datetime input
+    $('#woopt-sim-datetime').each(function () {
+      var $this = $(this);
+      if ($.fn.wpcdpk && !$this.hasClass('woopt_dpk_init')) {
+        $this.wpcdpk({
+          timepicker: true
+        }).addClass('woopt_dpk_init');
+      }
+    });
+  }
+
+  woopt_simulator_init();
+
+  // Set to current time button
+  $(document).on('click', '#woopt-sim-now-btn', function (e) {
+    e.preventDefault();
+    var now = new Date();
+    var month = String(now.getMonth() + 1).padStart(2, '0');
+    var day = String(now.getDate()).padStart(2, '0');
+    var year = now.getFullYear();
+    var hours = now.getHours();
+    var minutes = String(now.getMinutes()).padStart(2, '0');
+    var ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    var hoursStr = String(hours).padStart(2, '0');
+    var formatted = month + '/' + day + '/' + year + ' ' + hoursStr + ':' + minutes + ' ' + ampm;
+
+    $('#woopt-sim-datetime').val(formatted).trigger('change');
+  });
+
+  // Run Simulation button
+  $(document).on('click', '#woopt-sim-run', function (e) {
+    e.preventDefault();
+    var $btn = $(this);
+    var $spinner = $('#woopt-sim-spinner');
+    var $results = $('#woopt-sim-results');
+    var productId = $('#woopt-sim-product').val();
+    var datetime = $('#woopt-sim-datetime').val();
+    var userRole = $('#woopt-sim-role').val();
+
+    if (!productId) {
+      alert('Please select a product to simulate.');
+      $('#woopt-sim-product').selectWoo('open');
+      return;
+    }
+
+    $btn.prop('disabled', true);
+    $spinner.addClass('is-active');
+    $results.removeClass('woopt_hide').html(
+      '<div class="woopt-sim-loading"><span class="spinner is-active"></span> Simulating active timers for product...</div>'
+    );
+
+    $.post(ajaxurl, {
+      action: 'woopt_simulate',
+      nonce: woopt_vars.nonce,
+      product_id: productId,
+      datetime: datetime,
+      user_role: userRole
+    }, function (response) {
+      $btn.prop('disabled', false);
+      $spinner.removeClass('is-active');
+
+      if (!response.success) {
+        var errMsg = response.data && response.data.message ? response.data.message : 'Simulation failed.';
+        $results.html('<div class="woopt-sim-empty-state"><span class="dashicons dashicons-warning"></span><p>' + errMsg + '</p></div>');
+        return;
+      }
+
+      var data = response.data;
+      var html = '';
+
+      // 1. Product card header
+      html += '<div class="woopt-sim-product-card">';
+      html += '  <img src="' + data.product.image + '" class="woopt-sim-product-img" alt="" />';
+      html += '  <div class="woopt-sim-product-details">';
+      html += '    <h3 class="woopt-sim-product-title">';
+      html += '      <a href="' + data.product.edit_url + '" target="_blank">' + data.product.name + '</a>';
+      html += '      <span class="woopt-sim-badge woopt-sim-badge-inactive">#' + data.product.id + '</span>';
+      html += '    </h3>';
+      html += '    <div class="woopt-sim-product-meta">';
+      html += '      <div class="woopt-sim-meta-row">';
+      html += '        <span><strong>SKU:</strong> ' + data.product.sku + '</span>';
+      html += '        <span><strong>Type:</strong> ' + data.product.type + '</span>';
+      html += '        <span><strong>Base Stock:</strong> ' + data.product.orig_stock + '</span>';
+      html += '        <span><strong>Base Price:</strong> ' + data.product.orig_price + '</span>';
+      html += '      </div>';
+      html += '      <div class="woopt-sim-meta-row">';
+      html += '        <span><strong>Simulated Time:</strong> ' + data.simulated_time.weekday + ', ' + data.simulated_time.datetime + ' (Week ' + data.simulated_time.week + ')</span>';
+      html += '        <span><strong>User Role:</strong> ' + data.simulated_time.role_label + '</span>';
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      // 2. Active Effects Table
+      html += '<div class="woopt-sim-section-header">';
+      html += '  <h3><span class="dashicons dashicons-yes-alt"></span> Active Effects On This Product (' + data.active_effects.length + ')</h3>';
+      html += '</div>';
+
+      if (data.active_effects.length > 0) {
+        html += '<div class="woopt-sim-table-wrap">';
+        html += '  <table class="woopt-sim-table">';
+        html += '    <thead>';
+        html += '      <tr>';
+        html += '        <th>Feature</th>';
+        html += '        <th>Original Value</th>';
+        html += '        <th>Simulated Value</th>';
+        html += '        <th>Applied Timer Action</th>';
+        html += '        <th>Source</th>';
+        html += '      </tr>';
+        html += '    </thead>';
+        html += '    <tbody>';
+
+        $.each(data.active_effects, function (i, effect) {
+          var rowClass = effect.changed ? ' class="woopt-sim-row-changed"' : '';
+          var simValHtml = effect.changed ? '<span class="woopt-sim-value-changed">' + effect.simulated + '</span>' : effect.simulated;
+          var sourceBadgeClass = effect.source_type === 'product' ? 'woopt-sim-source-product' : 'woopt-sim-source-global';
+
+          html += '    <tr' + rowClass + '>';
+          html += '      <td><strong>' + effect.feature + '</strong></td>';
+          html += '      <td>' + effect.original + '</td>';
+          html += '      <td>' + simValHtml + '</td>';
+          html += '      <td><span class="woopt-sim-badge woopt-sim-badge-active">ACTIVE</span> <strong>' + effect.action_name + '</strong> (' + effect.description + ')</td>';
+          html += '      <td><span class="woopt-sim-source-tag ' + sourceBadgeClass + '">' + effect.source + '</span></td>';
+          html += '    </tr>';
+        });
+
+        html += '    </tbody>';
+        html += '  </table>';
+        html += '</div>';
+      } else {
+        html += '<div class="woopt-sim-empty-state">';
+        html += '  <span class="dashicons dashicons-info"></span>';
+        html += '  <p><strong>No active timers affecting this product.</strong><br>At the simulated date and time, the product will operate with its original settings.</p>';
+        html += '</div>';
+      }
+
+      // 3. Detailed Actions Breakdown
+      // Product Actions Breakdown
+      if (data.evaluated_actions.product_actions && data.evaluated_actions.product_actions.length > 0) {
+        html += '<div class="woopt-sim-section-header">';
+        html += '  <h3><span class="dashicons dashicons-admin-generic"></span> Product Basis Timers Evaluated (' + data.evaluated_actions.product_actions.length + ')</h3>';
+        html += '</div>';
+        html += '<div class="woopt-sim-actions-list">';
+
+        $.each(data.evaluated_actions.product_actions, function (i, item) {
+          var cardClass = item.status === 'applied' ? 'is-active-card' : (item.status === 'overridden' ? 'is-overridden-card' : 'is-inactive-card');
+          var badgeClass = item.status === 'applied' ? 'woopt-sim-badge-active' : (item.status === 'overridden' ? 'woopt-sim-badge-overridden' : 'woopt-sim-badge-inactive');
+
+          html += '<div class="woopt-sim-action-card ' + cardClass + '">';
+          html += '  <div class="woopt-sim-action-main">';
+          html += '    <div class="woopt-sim-action-title">';
+          html += '      <span>' + item.name + '</span> &mdash; <span class="description">' + item.label + '</span>';
+          html += '    </div>';
+          html += '    <div class="woopt-sim-action-meta">';
+          html += '      <span><strong>Time condition:</strong> ' + item.timer_summary + '</span>';
+          html += '      <span><strong>Roles:</strong> ' + item.roles_summary + '</span>';
+          html += '    </div>';
+          html += '  </div>';
+          html += '  <div class="woopt-sim-action-status-wrap">';
+          html += '    <span class="woopt-sim-badge ' + badgeClass + '">' + item.status_label + '</span>';
+          if (item.status_reason) {
+            html += '    <div class="woopt-sim-reason">' + item.status_reason + '</div>';
+          }
+          html += '  </div>';
+          html += '</div>';
+        });
+
+        html += '</div>';
+      }
+
+      // Global Actions Breakdown
+      if (data.evaluated_actions.global_actions && data.evaluated_actions.global_actions.length > 0) {
+        html += '<div class="woopt-sim-section-header">';
+        html += '  <h3><span class="dashicons dashicons-clock"></span> Global Timers Evaluated (' + data.evaluated_actions.global_actions.length + ')</h3>';
+        html += '</div>';
+        html += '<div class="woopt-sim-actions-list">';
+
+        $.each(data.evaluated_actions.global_actions, function (i, item) {
+          var cardClass = item.status === 'applied' ? 'is-active-card' : (item.status === 'overridden' ? 'is-overridden-card' : 'is-inactive-card');
+          var badgeClass = item.status === 'applied' ? 'woopt-sim-badge-active' : (item.status === 'overridden' ? 'woopt-sim-badge-overridden' : 'woopt-sim-badge-inactive');
+
+          html += '<div class="woopt-sim-action-card ' + cardClass + '">';
+          html += '  <div class="woopt-sim-action-main">';
+          html += '    <div class="woopt-sim-action-title">';
+          html += '      <span>' + item.name + '</span> &mdash; <span class="description">' + item.label + '</span>';
+          html += '    </div>';
+          html += '    <div class="woopt-sim-action-meta">';
+          html += '      <span><strong>Apply to:</strong> ' + item.apply_summary + '</span>';
+          html += '      <span><strong>Time condition:</strong> ' + item.timer_summary + '</span>';
+          html += '      <span><strong>Roles:</strong> ' + item.roles_summary + '</span>';
+          html += '    </div>';
+          html += '  </div>';
+          html += '  <div class="woopt-sim-action-status-wrap">';
+          html += '    <span class="woopt-sim-badge ' + badgeClass + '">' + item.status_label + '</span>';
+          if (item.status_reason) {
+            html += '    <div class="woopt-sim-reason">' + item.status_reason + '</div>';
+          }
+          html += '  </div>';
+          html += '</div>';
+        });
+
+        html += '</div>';
+      }
+
+      $results.html(html);
+    }).fail(function () {
+      $btn.prop('disabled', false);
+      $spinner.removeClass('is-active');
+      $results.html('<div class="woopt-sim-empty-state"><span class="dashicons dashicons-warning"></span><p>An error occurred while running the simulation. Please try again.</p></div>');
+    });
+  });
+
+  // Reset Simulation
+  $(document).on('click', '#woopt-sim-reset', function (e) {
+    e.preventDefault();
+    $('#woopt-sim-product').val(null).trigger('change');
+    $('#woopt-sim-role').val('woopt_all').trigger('change');
+    $('#woopt-sim-now-btn').trigger('click');
+    $('#woopt-sim-results').addClass('woopt_hide').empty();
+  });
 })(jQuery);

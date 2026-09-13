@@ -39,7 +39,6 @@
     background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
     border-radius: var(--woopt-radius) var(--woopt-radius) 0 0;
     padding: 28px 32px;
-    box-shadow: var(--woopt-shadow-md);
     color: #fff;
     position: relative;
     overflow: hidden;
@@ -1693,4 +1692,455 @@ body.rtl .woopt_actions select {
 
 .woopt_actions .woopt_user_roles_select {
     height: 120px;
+}
+
+/* ──── Simulator ────────────────────────────────────────────── */
+.woopt-sim-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+@media (max-width: 768px) {
+    .woopt-sim-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.woopt-sim-section {
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+    background: #f8fafc;
+    border: 1px solid var(--woopt-border);
+    border-radius: var(--woopt-radius);
+    padding: 20px;
+}
+
+.woopt-sim-section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0 0 16px;
+    padding: 0 0 12px;
+    border-bottom: 1px solid var(--woopt-border);
+    color: var(--woopt-text);
+}
+
+.woopt-sim-section-title .dashicons {
+    color: var(--woopt-primary);
+}
+
+.woopt-sim-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.woopt-sim-row:last-child {
+    margin-bottom: 0;
+}
+
+.woopt-sim-row label {
+    width: 130px;
+    flex: 0 0 130px;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--woopt-text);
+}
+
+.woopt-sim-row input,
+.woopt-sim-row select {
+    flex: 1;
+    min-width: 0;
+    height: 38px;
+    border: 1px solid var(--woopt-border);
+    border-radius: 6px;
+    padding: 0 12px;
+    font-size: 13px;
+    background-color: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.woopt-sim-row input:focus,
+.woopt-sim-row select:focus {
+    border-color: var(--woopt-primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(44, 75, 129, 0.12);
+}
+
+.woopt-sim-row input.woopt_date_time_input,
+.woopt-sim-row input.woopt_date_input,
+.woopt-sim-row input.woopt_time_input {
+    padding-left: 40px !important;
+    background-repeat: no-repeat !important;
+    background-position: 10px center !important;
+}
+
+.woopt-sim-row input.woopt_date_time_input:focus,
+.woopt-sim-row input.woopt_date_input:focus,
+.woopt-sim-row input.woopt_time_input:focus {
+    background-repeat: no-repeat !important;
+    background-position: 10px center !important;
+}
+
+.woopt-sim-row-product .select2-container {
+    flex: 1;
+    min-width: 0;
+    width: 100% !important;
+}
+
+.woopt-sim-datetime-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+}
+
+.woopt-sim-datetime-wrap input {
+    flex: 1;
+    min-width: 0;
+}
+
+.woopt-sim-row .woopt-current-time-badges {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.woopt-sim-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-top: 16px;
+    border-top: 1px solid var(--woopt-border);
+}
+
+.woopt-sim-actions #woopt-sim-run {
+    background: var(--woopt-primary) !important;
+    border-color: var(--woopt-primary) !important;
+    color: #fff !important;
+    font-weight: 600;
+    height: 38px;
+    padding: 0 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 6px;
+}
+
+.woopt-sim-actions #woopt-sim-run .dashicons {
+    line-height: 1;
+}
+
+.woopt-sim-actions #woopt-sim-run:hover {
+    opacity: 0.9;
+}
+
+.woopt-sim-actions #woopt-sim-reset {
+    height: 38px;
+    padding: 0 16px;
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+/* ──── Simulator Results ───────────────────────────────────── */
+.woopt-sim-results {
+    animation: wooptFadeIn 0.3s ease-in-out;
+    margin-top: 24px;
+}
+
+.woopt-sim-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 30px;
+    background: #f8fafc;
+    border: 1px dashed var(--woopt-border);
+    border-radius: var(--woopt-radius);
+    color: var(--woopt-muted);
+    font-size: 14px;
+}
+
+.woopt-sim-loading .spinner {
+    float: none;
+    margin: 0;
+}
+
+.woopt-sim-product-card {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 16px 20px;
+    background: #fff;
+    border: 1px solid var(--woopt-border);
+    border-radius: var(--woopt-radius);
+    margin-bottom: 20px;
+    box-shadow: var(--woopt-shadow);
+}
+
+.woopt-sim-product-img {
+    width: 56px;
+    height: 56px;
+    border-radius: 6px;
+    object-fit: cover;
+    border: 1px solid var(--woopt-border);
+    flex-shrink: 0;
+}
+
+.woopt-sim-product-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.woopt-sim-product-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--woopt-text);
+    margin: 0 0 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.woopt-sim-product-title a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.woopt-sim-product-title a:hover {
+    color: var(--woopt-primary);
+    text-decoration: underline;
+}
+
+.woopt-sim-product-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--woopt-muted);
+}
+
+.woopt-sim-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+}
+
+.woopt-sim-product-meta span,
+.woopt-sim-meta-row span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.woopt-sim-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 24px 0 12px;
+}
+
+.woopt-sim-section-header h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0;
+    color: var(--woopt-text);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.woopt-sim-table-wrap {
+    background: #fff;
+    border: 1px solid var(--woopt-border);
+    border-radius: var(--woopt-radius);
+    overflow: hidden;
+    box-shadow: var(--woopt-shadow);
+    margin-bottom: 24px;
+}
+
+.woopt-sim-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.woopt-sim-table th {
+    background: #f8fafc;
+    font-weight: 600;
+    color: var(--woopt-muted);
+    text-align: left;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--woopt-border);
+}
+
+.woopt-sim-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--woopt-border);
+    color: var(--woopt-text);
+    vertical-align: middle;
+}
+
+.woopt-sim-table tr:last-child td {
+    border-bottom: none;
+}
+
+.woopt-sim-table tr.woopt-sim-row-changed {
+    background-color: #f0fdf4;
+}
+
+.woopt-sim-value-changed {
+    color: #166534;
+    font-weight: 600;
+}
+
+.woopt-sim-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.woopt-sim-badge-active {
+    background: #dcfce7;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+}
+
+.woopt-sim-badge-overridden {
+    background: #fef3c7;
+    color: #b45309;
+    border: 1px solid #fde68a;
+}
+
+.woopt-sim-badge-inactive {
+    background: #f1f5f9;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+}
+
+.woopt-sim-source-tag {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.woopt-sim-source-global {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+.woopt-sim-source-product {
+    background: #fce7f3;
+    color: #9d174d;
+}
+
+.woopt-sim-empty-state {
+    padding: 32px 20px;
+    text-align: center;
+    background: #f8fafc;
+    border: 1px dashed var(--woopt-border);
+    border-radius: var(--woopt-radius);
+    color: var(--woopt-muted);
+}
+
+.woopt-sim-empty-state .dashicons {
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+    margin-bottom: 8px;
+    opacity: 0.5;
+}
+
+.woopt-sim-actions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.woopt-sim-action-card {
+    background: #fff;
+    border: 1px solid var(--woopt-border);
+    border-radius: var(--woopt-radius);
+    padding: 14px 18px;
+    box-shadow: var(--woopt-shadow);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.woopt-sim-action-card.is-active-card {
+    border-left: 4px solid #10b981;
+}
+
+.woopt-sim-action-card.is-overridden-card {
+    border-left: 4px solid #f59e0b;
+    opacity: 0.85;
+}
+
+.woopt-sim-action-card.is-inactive-card {
+    border-left: 4px solid #cbd5e1;
+    opacity: 0.75;
+}
+
+.woopt-sim-action-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.woopt-sim-action-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--woopt-text);
+    margin: 0 0 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.woopt-sim-action-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--woopt-muted);
+}
+
+.woopt-sim-action-meta strong {
+    color: var(--woopt-text);
+}
+
+.woopt-sim-action-status-wrap {
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.woopt-sim-reason {
+    font-size: 11px;
+    color: var(--woopt-muted);
+    margin-top: 4px;
+    max-width: 280px;
+    line-height: 1.3;
 }

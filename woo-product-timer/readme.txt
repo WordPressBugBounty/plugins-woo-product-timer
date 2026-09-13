@@ -3,7 +3,7 @@ Contributors: wpclever
 Donate link: https://wpclever.net
 Tags: woocommerce, wpc, timer, schedule
 Tested up to: 7.1
-Stable tag: 5.5.0
+Stable tag: 6.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -37,6 +37,7 @@ https://www.youtube.com/watch?v=5WwZNXGA2kA
 - Adjust the availability: set products as purchasable or unpurchasable
 - Adjust the time range for sale & regular prices
 - Enable/disable sold individually
+- Built-in Timer Simulator: test and preview active timers for any product at any simulated date, time, and user role
 - Compatible with all WordPress themes, WPC & WooCommerce plugins
 - Premium: Add multiple actions to a product. It’s unlimited.
 - Premium: Lifetime update & fast, dedicated support.
@@ -46,6 +47,18 @@ https://www.youtube.com/watch?v=5WwZNXGA2kA
 To save time, now you can add timers throughout your store or a whole range of products at ease with the Global Timer from the plugin setting. Control more at once.
 
 From the admin dashboard, go to WPClever >> Product Timer >> click on the Global Timer tab. Here you will choose all the actions and timers you would use for all products, selected categories, or certain products specified with selected product tags.
+
+= Test Timers with Timer Simulator =
+
+Wondering how your timer rules will behave next week, during an upcoming flash sale, or for guest visitors? The built-in **Timer Simulator** takes the guesswork out of configuring complex schedules.
+
+Instead of temporarily altering your system clock or waiting for the exact scheduled time to arrive, you can test any scenario right from the plugin settings:
+- **Select any product**: Search and choose any product in your store.
+- **Simulate date & time**: Pick any past, present, or future date and time using the datetime picker or preset quick buttons (Now, +1 Hour, Tomorrow, Next Week, Next Month).
+- **Simulate user roles**: Test as a guest visitor, logged-in customer, or any specific user role.
+- **Instant diagnostics**: Run the simulation to instantly inspect which timer rules (product-level or global) are triggered, whether conditions are met, and the exact actions applied (price adjustments, visibility, purchasability, stock status, etc.).
+
+From the admin dashboard, go to **WPClever >> Product Timer >> Simulator** to start testing your schedules safely.
 
 = Practical Use of WPC Product Timer for WooCommerce =
 
@@ -143,6 +156,10 @@ Please try other plugins from us:
 4. When adding/editing the product, you can choose the "Timer" tab, then add action and time conditional
 
 == Changelog ==
+
+= 6.0.0 =
+* Added: Timer Simulator feature
+* Updated: Optimized the code
 
 = 5.5.0 =
 * Updated: New interface for the settings page

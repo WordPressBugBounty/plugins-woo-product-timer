@@ -8,7 +8,7 @@ Author URI: https://wpclever.net
 Text Domain: woo-product-timer
 Domain Path: /languages/
 Requires Plugins: woocommerce
-Version: 5.5.0
+Version: 6.0.0
 Requires at least: 5.9
 WC requires at least: 3.0
 WC tested up to: 11.1
@@ -18,7 +18,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'WOOPT_VERSION' ) && define( 'WOOPT_VERSION', '5.5.0' );
+! defined( 'WOOPT_VERSION' ) && define( 'WOOPT_VERSION', '6.0.0' );
 ! defined( 'WOOPT_LITE' ) && define( 'WOOPT_LITE', __FILE__ );
 ! defined( 'WOOPT_FILE' ) && define( 'WOOPT_FILE', __FILE__ );
 ! defined( 'WOOPT_URI' ) && define( 'WOOPT_URI', plugin_dir_url( __FILE__ ) );
@@ -96,6 +96,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
                     add_action( 'wp_ajax_woopt_add_time', [ $this, 'ajax_add_time' ] );
                     add_action( 'wp_ajax_woopt_add_apply_combination', [ $this, 'ajax_add_apply_combination' ] );
                     add_action( 'wp_ajax_woopt_search_term', [ $this, 'ajax_search_term' ] );
+                    add_action( 'wp_ajax_woopt_simulate', [ $this, 'ajax_simulate' ] );
 
                     // Product class
                     add_filter( 'woocommerce_post_class', [ $this, 'woopt_post_class' ], 99, 2 );
@@ -524,11 +525,13 @@ if ( ! function_exists( 'woopt_init' ) ) {
                     return self::woopt_check_timer( $timer, $product_id );
                 }
 
-                public static function woopt_check_timer( $timer, $product_id = null ) {
+                public static function woopt_check_timer( $timer, $product_id = null, $now = null ) {
                     $check = true;
 
                     if ( ! empty( $timer ) ) {
-                        $now = self::get_now();
+                        if ( $now === null ) {
+                            $now = self::get_now();
+                        }
 
                         foreach ( $timer as $time ) {
                             $check_item = false;
@@ -711,7 +714,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
                     return apply_filters( 'woopt_check_timer', $check, $timer, $product_id );
                 }
 
-                public static function woopt_check_roles( $roles ) {
+                public static function woopt_check_roles( $roles, $sim_role = null ) {
                     $check = false;
 
                     if ( is_string( $roles ) ) {
@@ -720,6 +723,20 @@ if ( ! function_exists( 'woopt_init' ) ) {
 
                     if ( empty( $roles ) || in_array( 'woopt_all', (array) $roles ) || in_array( 'all', (array) $roles ) ) {
                         $check = true;
+                    }
+
+                    if ( $sim_role !== null ) {
+                        if ( $sim_role === 'woopt_guest' || $sim_role === 'guest' ) {
+                            if ( in_array( 'woopt_guest', (array) $roles ) || in_array( 'guest', (array) $roles ) ) {
+                                $check = true;
+                            }
+                        } else {
+                            if ( in_array( 'woopt_user', (array) $roles ) || in_array( $sim_role, (array) $roles ) ) {
+                                $check = true;
+                            }
+                        }
+
+                        return apply_filters( 'woopt_check_roles', $check, $roles );
                     }
 
                     if ( is_user_logged_in() ) {
@@ -1398,7 +1415,7 @@ if ( ! function_exists( 'woopt_init' ) ) {
                             $this,
                             'admin_menu_content'
                     ] );
-
+                    
                     if ( ! empty( self::$capabilities ) ) {
                         foreach ( self::$capabilities as $capability ) {
                             if ( current_user_can( $capability ) ) {
@@ -1456,6 +1473,10 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                 <a href="<?php echo esc_url( admin_url( 'admin.php?page=wpclever-woopt&tab=global' ) ); ?>"
                                    class="woopt-nav-item <?php echo esc_attr( $active_tab === 'global' ? 'active' : '' ); ?>">
                                     <?php esc_html_e( 'Global Timer', 'woo-product-timer' ); ?>
+                                </a>
+                                <a href="<?php echo esc_url( admin_url( 'admin.php?page=wpclever-woopt&tab=simulator' ) ); ?>"
+                                   class="woopt-nav-item <?php echo $active_tab === 'simulator' ? 'active' : ''; ?>">
+                                    <?php esc_html_e( 'Simulator', 'woo-product-timer' ); ?>
                                 </a>
                                 <a href="<?php echo esc_url( WOOPT_DOCS ); ?>" class="woopt-nav-item" target="_blank">
                                     <?php esc_html_e( 'Docs', 'woo-product-timer' ); ?>
@@ -1651,7 +1672,9 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                         </ul>
                                     </div>
                                 </div>
-                            <?php } ?>
+                            <?php } elseif ( $active_tab === 'simulator' ) {
+                                self::simulator();
+                            } ?>
                         </div>
                     </div>
                     <?php
@@ -1698,6 +1721,10 @@ if ( ! function_exists( 'woopt_init' ) ) {
                                 <a href="<?php echo esc_url( admin_url( 'admin.php?page=wpclever-woopt-global' ) ); ?>"
                                    class="woopt-nav-item active">
                                     <?php esc_html_e( 'Global Timer', 'woo-product-timer' ); ?>
+                                </a>
+                                <a href="<?php echo esc_url( admin_url( 'admin.php?page=wpclever-woopt&tab=simulator' ) ); ?>"
+                                   class="woopt-nav-item">
+                                    <?php esc_html_e( 'Simulator', 'woo-product-timer' ); ?>
                                 </a>
                                 <a href="<?php echo esc_url( WOOPT_DOCS ); ?>" class="woopt-nav-item" target="_blank">
                                     <?php esc_html_e( 'Docs', 'woo-product-timer' ); ?>
@@ -2726,6 +2753,752 @@ if ( ! function_exists( 'woopt_init' ) ) {
 
                     return apply_filters( 'woopt_generate_key', $key );
                 }
+                public static function simulator() {
+                    global $wp_roles;
+                    ?>
+                    <div class="woopt-card">
+                        <div class="woopt-card-header">
+                            <div>
+                                <h2 class="woopt-card-title">
+                                    <span class="dashicons dashicons-controls-play"></span>
+                                    <?php esc_html_e( 'Timer Simulator', 'woo-product-timer' ); ?>
+                                </h2>
+                                <p class="woopt-card-desc">
+                                    <?php esc_html_e( 'Select a product and specific date & time to test and see which timers (Product or Global) are currently active and affecting it.', 'woo-product-timer' ); ?>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="woopt-sim-grid" id="woopt-simulator-form">
+                            <div class="woopt-sim-section">
+                                <h3 class="woopt-sim-section-title">
+                                    <span class="dashicons dashicons-products"></span>
+                                    <?php esc_html_e( 'Target Product', 'woo-product-timer' ); ?>
+                                </h3>
+                                <div class="woopt-sim-row woopt-sim-row-product">
+                                    <label for="woopt-sim-product"><?php esc_html_e( 'Product', 'woo-product-timer' ); ?></label>
+                                    <select id="woopt-sim-product" class="wc-product-search"
+                                            data-placeholder="<?php esc_attr_e( 'Search for a product or variation...', 'woo-product-timer' ); ?>"
+                                            data-action="woocommerce_json_search_products_and_variations">
+                                    </select>
+                                </div>
+                                <div class="woopt-sim-row">
+                                    <label for="woopt-sim-role"><?php esc_html_e( 'User role', 'woo-product-timer' ); ?></label>
+                                    <select id="woopt-sim-role">
+                                        <option value="woopt_all"><?php esc_html_e( 'All (Default / Any visitor)', 'woo-product-timer' ); ?></option>
+                                        <option value="woopt_guest"><?php esc_html_e( 'Guest (not logged in)', 'woo-product-timer' ); ?></option>
+                                        <option value="woopt_user"><?php esc_html_e( 'Logged-in user (Any role)', 'woo-product-timer' ); ?></option>
+                                        <?php
+                                        if ( ! empty( $wp_roles->roles ) ) {
+                                            foreach ( $wp_roles->roles as $role => $details ) {
+                                                echo '<option value="' . esc_attr( $role ) . '">' . esc_html( $details['name'] ) . '</option>';
+                                            }
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="woopt-sim-section">
+                                <h3 class="woopt-sim-section-title">
+                                    <span class="dashicons dashicons-clock"></span>
+                                    <?php esc_html_e( 'Simulated Date & Time', 'woo-product-timer' ); ?>
+                                </h3>
+                                <div class="woopt-sim-row">
+                                    <label for="woopt-sim-datetime"><?php esc_html_e( 'Date & Time', 'woo-product-timer' ); ?></label>
+                                    <div class="woopt-sim-datetime-wrap">
+                                        <input type="text" id="woopt-sim-datetime" class="woopt_date_time_input"
+                                               value="<?php echo esc_attr( current_time( 'm/d/Y h:i a' ) ); ?>"
+                                               placeholder="MM/DD/YYYY HH:MM AM/PM" />
+                                        <button type="button" id="woopt-sim-now-btn" class="woopt-action-tool-btn" title="<?php esc_attr_e( 'Set to current server time', 'woo-product-timer' ); ?>">
+                                            <span class="dashicons dashicons-update"></span> <?php esc_html_e( 'Now', 'woo-product-timer' ); ?>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="woopt-sim-row">
+                                    <label><?php esc_html_e( 'Server Current Time', 'woo-product-timer' ); ?></label>
+                                    <div class="woopt-current-time-badges">
+                                        <code><?php echo esc_html( current_time( 'm/d/Y h:i a' ) ); ?></code>
+                                        <code><?php echo esc_html( current_time( 'l' ) ); ?></code>
+                                        <code><?php echo esc_html__( 'Week No.', 'woo-product-timer' ) . ' ' . esc_html( current_time( 'W' ) ); ?></code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="woopt-sim-actions">
+                            <button type="button" id="woopt-sim-run" class="button button-primary">
+                                <span class="dashicons dashicons-controls-play"></span>
+                                <?php esc_html_e( 'Run Simulation', 'woo-product-timer' ); ?>
+                            </button>
+                            <button type="button" id="woopt-sim-reset" class="button">
+                                <?php esc_html_e( 'Reset', 'woo-product-timer' ); ?>
+                            </button>
+                            <span id="woopt-sim-spinner" class="spinner"></span>
+                        </div>
+
+                        <div id="woopt-sim-results" class="woopt-sim-results woopt_hide"></div>
+                    </div>
+                    <?php
+                }
+
+                public function ajax_simulate() {
+                    check_ajax_referer( 'woopt-security', 'nonce' );
+
+                    if ( ! current_user_can( 'manage_options' ) ) {
+                        wp_send_json_error( [ 'message' => esc_html__( 'Unauthorized permission.', 'woo-product-timer' ) ] );
+                    }
+
+                    $product_id   = isset( $_POST['product_id'] ) ? absint( $_POST['product_id'] ) : 0;
+                    $datetime_str = isset( $_POST['datetime'] ) ? sanitize_text_field( wp_unslash( $_POST['datetime'] ) ) : '';
+                    $user_role    = isset( $_POST['user_role'] ) ? sanitize_text_field( wp_unslash( $_POST['user_role'] ) ) : 'woopt_all';
+
+                    if ( ! $product_id ) {
+                        wp_send_json_error( [ 'message' => esc_html__( 'Please select a valid product.', 'woo-product-timer' ) ] );
+                    }
+
+                    $product = wc_get_product( $product_id );
+                    if ( ! $product ) {
+                        wp_send_json_error( [ 'message' => esc_html__( 'Product not found.', 'woo-product-timer' ) ] );
+                    }
+
+                    $timestamp = $datetime_str ? strtotime( $datetime_str ) : current_time( 'U' );
+                    if ( ! $timestamp ) {
+                        $timestamp = current_time( 'U' );
+                    }
+
+                    $sim_now = [
+                        'date'      => date_i18n( 'm/d/Y', $timestamp ),
+                        'datetime'  => date_i18n( 'm/d/Y h:i a', $timestamp ),
+                        'day'       => (int) date_i18n( 'd', $timestamp ),
+                        'weekday'   => strtolower( date_i18n( 'D', $timestamp ) ),
+                        'week'      => (int) date_i18n( 'W', $timestamp ),
+                        'monthday'  => strtolower( date_i18n( 'j', $timestamp ) ),
+                        'month'     => (int) date_i18n( 'm', $timestamp ),
+                        'timestamp' => $timestamp,
+                    ];
+
+                    $is_variation = $product->is_type( 'variation' );
+                    $parent_id    = $is_variation ? $product->get_parent_id() : 0;
+                    $product_name = $product->get_name();
+                    $product_sku  = $product->get_sku() ?: '—';
+                    $product_type = $product->get_type();
+                    $edit_url     = get_edit_post_link( $is_variation ? $parent_id : $product_id );
+                    $image_id     = $product->get_image_id();
+                    if ( ! $image_id && $is_variation ) {
+                        $parent_prod = wc_get_product( $parent_id );
+                        if ( $parent_prod ) {
+                            $image_id = $parent_prod->get_image_id();
+                        }
+                    }
+                    $image_url = $image_id ? wp_get_attachment_image_url( $image_id, 'thumbnail' ) : wc_placeholder_img_src( 'thumbnail' );
+
+                    // Original product values
+                    $orig_stock_status   = $product->get_stock_status();
+                    $orig_regular_price  = $product->get_regular_price( 'edit' );
+                    $orig_sale_price     = $product->get_sale_price( 'edit' );
+                    $orig_price          = $product->get_price( 'edit' );
+                    $orig_is_purchasable = $product->is_purchasable();
+                    $orig_is_featured    = $product->is_featured();
+                    $orig_is_onsale      = $product->is_on_sale( 'edit' );
+                    $orig_is_individually= $product->is_sold_individually();
+                    $orig_visibility     = $product->get_catalog_visibility();
+
+                    // Feature maps for actions
+                    $action_feature_map = [
+                        'set_instock'               => 'stock',
+                        'set_outofstock'            => 'stock',
+                        'set_visible'               => 'visibility',
+                        'set_hidden'                => 'visibility',
+                        'set_catalog_visibility'    => 'visibility',
+                        'set_featured'              => 'featured',
+                        'set_unfeatured'            => 'featured',
+                        'set_purchasable'           => 'purchasable',
+                        'set_unpurchasable'         => 'purchasable',
+                        'set_regularprice'          => 'regular_price',
+                        'set_saleprice'             => 'sale_price',
+                        'enable_onsale'             => 'onsale',
+                        'disable_onsale'            => 'onsale',
+                        'enable_sold_individually'  => 'sold_individually',
+                        'disable_sold_individually' => 'sold_individually',
+                    ];
+
+                    $eval_global_actions  = [];
+                    $eval_product_actions = [];
+
+                    // Evaluate Global Actions
+                    if ( is_array( self::$global_actions ) && count( self::$global_actions ) > 0 ) {
+                        foreach ( self::$global_actions as $key => $global_action ) {
+                            $action_data      = self::woopt_action_data( $global_action );
+                            $action_key       = $action_data['action'];
+                            $action_apply     = $action_data['apply'];
+                            $action_apply_val = $action_data['apply_val'];
+                            $action_timer     = $action_data['timer'];
+                            $action_roles     = $action_data['roles'];
+                            $action_name      = ! empty( $global_action['name'] ) ? $global_action['name'] : ( '#' . ( is_numeric( $key ) ? ( (int) $key + 1 ) : $key ) );
+
+                            if ( empty( $action_key ) || ! isset( $action_feature_map[ $action_key ] ) ) {
+                                continue;
+                            }
+
+                            $feat = $action_feature_map[ $action_key ];
+                            $feature_enabled = true;
+                            if ( ! empty( self::$features ) ) {
+                                $feat_toggle_key = $feat;
+                                if ( $feat === 'regular_price' || $feat === 'sale_price' ) {
+                                    $feat_toggle_key = 'price';
+                                } elseif ( $feat === 'sold_individually' ) {
+                                    $feat_toggle_key = 'individually';
+                                }
+                                if ( ! in_array( $feat_toggle_key, self::$features, true ) ) {
+                                    $feature_enabled = false;
+                                }
+                            }
+
+                            // Check apply
+                            $match_apply = false;
+                            if ( $is_variation ) {
+                                if ( $action_apply === 'apply_product' || $action_apply === 'apply_combination' ) {
+                                    $match_apply = self::woopt_check_apply( $product_id, $action_apply, $action_apply_val, true );
+                                }
+                                if ( ! $match_apply ) {
+                                    $match_apply = self::woopt_check_apply( $parent_id, $action_apply, $action_apply_val );
+                                }
+                            } else {
+                                $match_apply = self::woopt_check_apply( $product_id, $action_apply, $action_apply_val );
+                            }
+
+                            // Check timer
+                            $match_timer = self::woopt_check_timer( $action_timer, $product_id, $sim_now );
+
+                            // Check roles
+                            $match_roles = self::woopt_check_roles( $action_roles, $user_role );
+
+                            $is_matched = $match_apply && $match_timer && $match_roles;
+
+                            $eval_global_actions[ $key ] = [
+                                'key'             => $key,
+                                'source'          => 'global',
+                                'source_label'    => esc_html__( 'Global Timer', 'woo-product-timer' ),
+                                'name'            => $action_name,
+                                'action'          => $action_key,
+                                'feature'         => $feat,
+                                'label'           => self::format_action_label( $action_key, $action_data['action_val'] ),
+                                'apply_summary'   => self::format_apply_summary( $action_apply, $action_apply_val ),
+                                'timer_summary'   => self::format_timer_summary( $action_timer ),
+                                'roles_summary'   => self::format_roles_summary( $action_roles ),
+                                'feature_enabled' => $feature_enabled,
+                                'match_apply'     => $match_apply,
+                                'match_timer'     => $match_timer,
+                                'match_roles'     => $match_roles,
+                                'is_matched'      => $is_matched,
+                                'status'          => 'inactive',
+                                'status_label'    => '',
+                                'status_reason'   => '',
+                                'action_data'     => $action_data,
+                            ];
+                        }
+                    }
+
+                    // Evaluate Product Actions
+                    $raw_product_actions = self::get_product_actions_meta( $is_variation ? $parent_id : $product_id );
+                    if ( is_array( $raw_product_actions ) && count( $raw_product_actions ) > 0 ) {
+                        foreach ( $raw_product_actions as $key => $prod_action ) {
+                            $action_data  = self::woopt_action_data( $prod_action );
+                            $action_key   = $action_data['action'];
+                            $action_timer = $action_data['timer'];
+                            $action_roles = $action_data['roles'];
+                            $action_name  = ! empty( $prod_action['name'] ) ? $prod_action['name'] : ( '#' . ( is_numeric( $key ) ? ( (int) $key + 1 ) : $key ) );
+
+                            if ( empty( $action_key ) || ! isset( $action_feature_map[ $action_key ] ) ) {
+                                continue;
+                            }
+
+                            $feat = $action_feature_map[ $action_key ];
+                            $feature_enabled = true;
+                            if ( ! empty( self::$features ) ) {
+                                $feat_toggle_key = $feat;
+                                if ( $feat === 'regular_price' || $feat === 'sale_price' ) {
+                                    $feat_toggle_key = 'price';
+                                } elseif ( $feat === 'sold_individually' ) {
+                                    $feat_toggle_key = 'individually';
+                                }
+                                if ( ! in_array( $feat_toggle_key, self::$features, true ) ) {
+                                    $feature_enabled = false;
+                                }
+                            }
+
+                            $match_apply = true; // Product timers apply directly to this product
+                            $match_timer = self::woopt_check_timer( $action_timer, $product_id, $sim_now );
+                            $match_roles = self::woopt_check_roles( $action_roles, $user_role );
+
+                            $is_matched = $match_timer && $match_roles && $feature_enabled;
+
+                            $eval_product_actions[ $key ] = [
+                                'key'             => $key,
+                                'source'          => 'product',
+                                'source_label'    => esc_html__( 'Product Timer', 'woo-product-timer' ),
+                                'name'            => $action_name,
+                                'action'          => $action_key,
+                                'feature'         => $feat,
+                                'label'           => self::format_action_label( $action_key, $action_data['action_val'] ),
+                                'apply_summary'   => esc_html__( 'This product', 'woo-product-timer' ),
+                                'timer_summary'   => self::format_timer_summary( $action_timer ),
+                                'roles_summary'   => self::format_roles_summary( $action_roles ),
+                                'feature_enabled' => $feature_enabled,
+                                'match_apply'     => true,
+                                'match_timer'     => $match_timer,
+                                'match_roles'     => $match_roles,
+                                'is_matched'      => $is_matched,
+                                'status'          => 'inactive',
+                                'status_label'    => '',
+                                'status_reason'   => '',
+                                'action_data'     => $action_data,
+                            ];
+                        }
+                    }
+
+                    // Determine winning actions per feature
+                    $winning_global_actions  = [];
+                    $winning_product_actions = [];
+                    $final_active_actions    = [];
+
+                    // 1. Resolve Global Actions winners (reverse iterate: last match wins)
+                    $reversed_global_keys = array_reverse( array_keys( $eval_global_actions ) );
+                    foreach ( $reversed_global_keys as $k ) {
+                        $item = $eval_global_actions[ $k ];
+                        if ( $item['is_matched'] ) {
+                            $f = $item['feature'];
+                            if ( ! isset( $winning_global_actions[ $f ] ) ) {
+                                $winning_global_actions[ $f ] = $k;
+                            } else {
+                                $eval_global_actions[ $k ]['status']        = 'overridden';
+                                $eval_global_actions[ $k ]['status_label']  = esc_html__( 'Overridden', 'woo-product-timer' );
+                                $eval_global_actions[ $k ]['status_reason'] = sprintf( esc_html__( 'Overridden by Global Action %s', 'woo-product-timer' ), $eval_global_actions[ $winning_global_actions[ $f ] ]['name'] );
+                            }
+                        } else {
+                            if ( ! $item['feature_enabled'] ) {
+                                $eval_global_actions[ $k ]['status']        = 'feature_disabled';
+                                $eval_global_actions[ $k ]['status_label']  = esc_html__( 'Feature disabled', 'woo-product-timer' );
+                                $eval_global_actions[ $k ]['status_reason'] = esc_html__( 'Feature is disabled in General Settings', 'woo-product-timer' );
+                            } elseif ( ! $item['match_apply'] ) {
+                                $eval_global_actions[ $k ]['status']        = 'not_applicable';
+                                $eval_global_actions[ $k ]['status_label']  = esc_html__( 'Not applicable', 'woo-product-timer' );
+                                $eval_global_actions[ $k ]['status_reason'] = esc_html__( 'Does not target this product', 'woo-product-timer' );
+                            } elseif ( ! $item['match_timer'] ) {
+                                $eval_global_actions[ $k ]['status']        = 'time_mismatch';
+                                $eval_global_actions[ $k ]['status_label']  = esc_html__( 'Time not matched', 'woo-product-timer' );
+                                $eval_global_actions[ $k ]['status_reason'] = esc_html__( 'Current simulated time does not fall into time condition', 'woo-product-timer' );
+                            } elseif ( ! $item['match_roles'] ) {
+                                $eval_global_actions[ $k ]['status']        = 'role_mismatch';
+                                $eval_global_actions[ $k ]['status_label']  = esc_html__( 'Role not matched', 'woo-product-timer' );
+                                $eval_global_actions[ $k ]['status_reason'] = esc_html__( 'Selected user role does not match condition', 'woo-product-timer' );
+                            }
+                        }
+                    }
+
+                    // 2. Resolve Product Actions winners (reverse iterate: last match wins)
+                    $reversed_product_keys = array_reverse( array_keys( $eval_product_actions ) );
+                    foreach ( $reversed_product_keys as $k ) {
+                        $item = $eval_product_actions[ $k ];
+                        if ( $item['is_matched'] ) {
+                            $f = $item['feature'];
+                            if ( ! isset( $winning_product_actions[ $f ] ) ) {
+                                $winning_product_actions[ $f ] = $k;
+                            } else {
+                                $eval_product_actions[ $k ]['status']        = 'overridden';
+                                $eval_product_actions[ $k ]['status_label']  = esc_html__( 'Overridden', 'woo-product-timer' );
+                                $eval_product_actions[ $k ]['status_reason'] = sprintf( esc_html__( 'Overridden by Product Action %s', 'woo-product-timer' ), $eval_product_actions[ $winning_product_actions[ $f ] ]['name'] );
+                            }
+                        } else {
+                            if ( ! $item['feature_enabled'] ) {
+                                $eval_product_actions[ $k ]['status']        = 'feature_disabled';
+                                $eval_product_actions[ $k ]['status_label']  = esc_html__( 'Feature disabled', 'woo-product-timer' );
+                                $eval_product_actions[ $k ]['status_reason'] = esc_html__( 'Feature is disabled in General Settings', 'woo-product-timer' );
+                            } elseif ( ! $item['match_timer'] ) {
+                                $eval_product_actions[ $k ]['status']        = 'time_mismatch';
+                                $eval_product_actions[ $k ]['status_label']  = esc_html__( 'Time not matched', 'woo-product-timer' );
+                                $eval_product_actions[ $k ]['status_reason'] = esc_html__( 'Current simulated time does not fall into time condition', 'woo-product-timer' );
+                            } elseif ( ! $item['match_roles'] ) {
+                                $eval_product_actions[ $k ]['status']        = 'role_mismatch';
+                                $eval_product_actions[ $k ]['status_label']  = esc_html__( 'Role not matched', 'woo-product-timer' );
+                                $eval_product_actions[ $k ]['status_reason'] = esc_html__( 'Selected user role does not match condition', 'woo-product-timer' );
+                            }
+                        }
+                    }
+
+                    // 3. Combine winners: Product Actions override Global Actions
+                    $all_features = [ 'stock', 'visibility', 'featured', 'purchasable', 'regular_price', 'sale_price', 'onsale', 'sold_individually' ];
+                    foreach ( $all_features as $f ) {
+                        if ( isset( $winning_product_actions[ $f ] ) ) {
+                            $prod_k = $winning_product_actions[ $f ];
+                            $eval_product_actions[ $prod_k ]['status']        = 'applied';
+                            $eval_product_actions[ $prod_k ]['status_label']  = esc_html__( 'Active & Applied', 'woo-product-timer' );
+                            $eval_product_actions[ $prod_k ]['status_reason'] = esc_html__( 'Winner (Product basis timer overrides global timer)', 'woo-product-timer' );
+                            $final_active_actions[ $f ] = $eval_product_actions[ $prod_k ];
+
+                            if ( isset( $winning_global_actions[ $f ] ) ) {
+                                $glob_k = $winning_global_actions[ $f ];
+                                $eval_global_actions[ $glob_k ]['status']        = 'overridden';
+                                $eval_global_actions[ $glob_k ]['status_label']  = esc_html__( 'Overridden by Product', 'woo-product-timer' );
+                                $eval_global_actions[ $glob_k ]['status_reason'] = sprintf( esc_html__( 'Overridden by Product Action %s', 'woo-product-timer' ), $eval_product_actions[ $prod_k ]['name'] );
+                            }
+                        } elseif ( isset( $winning_global_actions[ $f ] ) ) {
+                            $glob_k = $winning_global_actions[ $f ];
+                            $eval_global_actions[ $glob_k ]['status']        = 'applied';
+                            $eval_global_actions[ $glob_k ]['status_label']  = esc_html__( 'Active & Applied', 'woo-product-timer' );
+                            $eval_global_actions[ $glob_k ]['status_reason'] = esc_html__( 'Winner from Global Timer', 'woo-product-timer' );
+                            $final_active_actions[ $f ] = $eval_global_actions[ $glob_k ];
+                        }
+                    }
+
+                    // Build Active Effects table data
+                    $active_effects = [];
+
+                    // 1. Stock
+                    if ( isset( $final_active_actions['stock'] ) ) {
+                        $act = $final_active_actions['stock'];
+                        $new_stock = $act['action'] === 'set_instock' ? 'instock' : 'outofstock';
+                        $active_effects[] = [
+                            'feature'        => esc_html__( 'Stock status', 'woo-product-timer' ),
+                            'original'       => $orig_stock_status === 'instock' ? esc_html__( 'In stock', 'woo-product-timer' ) : ( $orig_stock_status === 'outofstock' ? esc_html__( 'Out of stock', 'woo-product-timer' ) : esc_html__( 'On backorder', 'woo-product-timer' ) ),
+                            'simulated'      => $new_stock === 'instock' ? esc_html__( 'In stock', 'woo-product-timer' ) : esc_html__( 'Out of stock', 'woo-product-timer' ),
+                            'changed'        => $orig_stock_status !== $new_stock,
+                            'action_name'    => $act['name'],
+                            'source'         => $act['source_label'],
+                            'source_type'    => $act['source'],
+                            'description'    => $act['label'],
+                        ];
+                    }
+
+                    // 2. Visibility
+                    if ( isset( $final_active_actions['visibility'] ) ) {
+                        $act = $final_active_actions['visibility'];
+                        $sim_vis = $act['action'] === 'set_visible' ? 'visible' : ( $act['action'] === 'set_hidden' ? 'hidden' : 'catalog' );
+                        $active_effects[] = [
+                            'feature'        => esc_html__( 'Catalog visibility', 'woo-product-timer' ),
+                            'original'       => ucfirst( $orig_visibility ),
+                            'simulated'      => ucfirst( $sim_vis ),
+                            'changed'        => $orig_visibility !== $sim_vis,
+                            'action_name'    => $act['name'],
+                            'source'         => $act['source_label'],
+                            'source_type'    => $act['source'],
+                            'description'    => $act['label'],
+                        ];
+                    }
+
+                    // 3. Regular Price
+                    $simulated_regular_price = $orig_regular_price;
+                    if ( isset( $final_active_actions['regular_price'] ) ) {
+                        $act = $final_active_actions['regular_price'];
+                        $val = isset( $act['action_data']['action_val']['value'] ) ? (float) $act['action_data']['action_val']['value'] : 0;
+                        $base = ! empty( $act['action_data']['action_val']['base'] ) ? $act['action_data']['action_val']['base'] : 'fa';
+                        if ( $base === 'pr' || $base === 'ps' ) {
+                            $calc_price = (float) $orig_regular_price * $val / 100;
+                        } else {
+                            $calc_price = $val;
+                        }
+                        $simulated_regular_price = $calc_price;
+                        $active_effects[] = [
+                            'feature'        => esc_html__( 'Regular price', 'woo-product-timer' ),
+                            'original'       => wc_price( $orig_regular_price ),
+                            'simulated'      => wc_price( $calc_price ),
+                            'changed'        => (float) $orig_regular_price !== (float) $calc_price,
+                            'action_name'    => $act['name'],
+                            'source'         => $act['source_label'],
+                            'source_type'    => $act['source'],
+                            'description'    => $act['label'],
+                        ];
+                    }
+
+                    // 4. Sale Price
+                    if ( isset( $final_active_actions['sale_price'] ) ) {
+                        $act = $final_active_actions['sale_price'];
+                        $val = isset( $act['action_data']['action_val']['value'] ) ? (float) $act['action_data']['action_val']['value'] : 0;
+                        $base = ! empty( $act['action_data']['action_val']['base'] ) ? $act['action_data']['action_val']['base'] : 'fa';
+                        if ( $base === 'pr' ) {
+                            $calc_sale = (float) $simulated_regular_price * $val / 100;
+                        } elseif ( $base === 'ps' ) {
+                            $calc_sale = (float) $orig_sale_price * $val / 100;
+                        } else {
+                            $calc_sale = $val;
+                        }
+                        $active_effects[] = [
+                            'feature'        => esc_html__( 'Sale price', 'woo-product-timer' ),
+                            'original'       => $orig_sale_price !== '' ? wc_price( $orig_sale_price ) : esc_html__( 'None', 'woo-product-timer' ),
+                            'simulated'      => wc_price( $calc_sale ),
+                            'changed'        => (float) $orig_sale_price !== (float) $calc_sale,
+                            'action_name'    => $act['name'],
+                            'source'         => $act['source_label'],
+                            'source_type'    => $act['source'],
+                            'description'    => $act['label'],
+                        ];
+                    }
+
+                    // 5. Featured
+                    if ( isset( $final_active_actions['featured'] ) ) {
+                        $act = $final_active_actions['featured'];
+                        $new_feat = $act['action'] === 'set_featured';
+                        $active_effects[] = [
+                            'feature'        => esc_html__( 'Featured product', 'woo-product-timer' ),
+                            'original'       => $orig_is_featured ? esc_html__( 'Yes', 'woo-product-timer' ) : esc_html__( 'No', 'woo-product-timer' ),
+                            'simulated'      => $new_feat ? esc_html__( 'Yes', 'woo-product-timer' ) : esc_html__( 'No', 'woo-product-timer' ),
+                            'changed'        => $orig_is_featured !== $new_feat,
+                            'action_name'    => $act['name'],
+                            'source'         => $act['source_label'],
+                            'source_type'    => $act['source'],
+                            'description'    => $act['label'],
+                        ];
+                    }
+
+                    // 6. Purchasable
+                    if ( isset( $final_active_actions['purchasable'] ) ) {
+                        $act = $final_active_actions['purchasable'];
+                        $new_purch = $act['action'] === 'set_purchasable';
+                        $active_effects[] = [
+                            'feature'        => esc_html__( 'Purchasable', 'woo-product-timer' ),
+                            'original'       => $orig_is_purchasable ? esc_html__( 'Yes', 'woo-product-timer' ) : esc_html__( 'No', 'woo-product-timer' ),
+                            'simulated'      => $new_purch ? esc_html__( 'Yes', 'woo-product-timer' ) : esc_html__( 'No', 'woo-product-timer' ),
+                            'changed'        => $orig_is_purchasable !== $new_purch,
+                            'action_name'    => $act['name'],
+                            'source'         => $act['source_label'],
+                            'source_type'    => $act['source'],
+                            'description'    => $act['label'],
+                        ];
+                    }
+
+                    // 7. On Sale
+                    if ( isset( $final_active_actions['onsale'] ) ) {
+                        $act = $final_active_actions['onsale'];
+                        $new_onsale = $act['action'] === 'enable_onsale';
+                        $active_effects[] = [
+                            'feature'        => esc_html__( 'On sale badge', 'woo-product-timer' ),
+                            'original'       => $orig_is_onsale ? esc_html__( 'Yes', 'woo-product-timer' ) : esc_html__( 'No', 'woo-product-timer' ),
+                            'simulated'      => $new_onsale ? esc_html__( 'Yes', 'woo-product-timer' ) : esc_html__( 'No', 'woo-product-timer' ),
+                            'changed'        => $orig_is_onsale !== $new_onsale,
+                            'action_name'    => $act['name'],
+                            'source'         => $act['source_label'],
+                            'source_type'    => $act['source'],
+                            'description'    => $act['label'],
+                        ];
+                    }
+
+                    // 8. Sold Individually
+                    if ( isset( $final_active_actions['sold_individually'] ) ) {
+                        $act = $final_active_actions['sold_individually'];
+                        $new_indiv = $act['action'] === 'enable_sold_individually';
+                        $active_effects[] = [
+                            'feature'        => esc_html__( 'Sold individually', 'woo-product-timer' ),
+                            'original'       => $orig_is_individually ? esc_html__( 'Yes', 'woo-product-timer' ) : esc_html__( 'No', 'woo-product-timer' ),
+                            'simulated'      => $new_indiv ? esc_html__( 'Yes', 'woo-product-timer' ) : esc_html__( 'No', 'woo-product-timer' ),
+                            'changed'        => $orig_is_individually !== $new_indiv,
+                            'action_name'    => $act['name'],
+                            'source'         => $act['source_label'],
+                            'source_type'    => $act['source'],
+                            'description'    => $act['label'],
+                        ];
+                    }
+
+                    wp_send_json_success( [
+                        'product'           => [
+                            'id'           => $product_id,
+                            'name'         => $product_name,
+                            'sku'          => $product_sku,
+                            'type'         => ucfirst( $product_type ),
+                            'image'        => $image_url,
+                            'edit_url'     => $edit_url,
+                            'is_variation' => $is_variation,
+                            'orig_stock'   => $orig_stock_status,
+                            'orig_price'   => wc_price( $orig_price ),
+                        ],
+                        'simulated_time'    => [
+                            'datetime'   => $sim_now['datetime'],
+                            'date'       => $sim_now['date'],
+                            'weekday'    => date_i18n( 'l', $timestamp ),
+                            'week'       => $sim_now['week'],
+                            'role'       => $user_role,
+                            'role_label' => $user_role === 'woopt_all' ? esc_html__( 'All visitors', 'woo-product-timer' ) : ( $user_role === 'woopt_guest' ? esc_html__( 'Guest', 'woo-product-timer' ) : ( $user_role === 'woopt_user' ? esc_html__( 'Logged-in user', 'woo-product-timer' ) : ucfirst( $user_role ) ) ),
+                        ],
+                        'active_effects'    => $active_effects,
+                        'evaluated_actions' => [
+                            'product_actions' => array_values( $eval_product_actions ),
+                            'global_actions'  => array_values( $eval_global_actions ),
+                        ],
+                        'summary_counts'    => [
+                            'total_active'  => count( $active_effects ),
+                            'total_product' => count( $eval_product_actions ),
+                            'total_global'  => count( $eval_global_actions ),
+                        ],
+                    ] );
+                }
+
+                public static function format_action_label( $action_key, $action_val = [] ) {
+                    $labels = [
+                        'set_instock'               => esc_html__( 'Set in stock', 'woo-product-timer' ),
+                        'set_outofstock'            => esc_html__( 'Set out of stock', 'woo-product-timer' ),
+                        'set_visible'               => esc_html__( 'Set visible', 'woo-product-timer' ),
+                        'set_hidden'                => esc_html__( 'Set hidden', 'woo-product-timer' ),
+                        'set_catalog_visibility'    => esc_html__( 'Set catalog visibility', 'woo-product-timer' ),
+                        'set_featured'              => esc_html__( 'Set featured', 'woo-product-timer' ),
+                        'set_unfeatured'            => esc_html__( 'Set unfeatured', 'woo-product-timer' ),
+                        'set_purchasable'           => esc_html__( 'Set purchasable', 'woo-product-timer' ),
+                        'set_unpurchasable'         => esc_html__( 'Set unpurchasable', 'woo-product-timer' ),
+                        'enable_onsale'             => esc_html__( 'Enable on-sale', 'woo-product-timer' ),
+                        'disable_onsale'            => esc_html__( 'Disable on-sale', 'woo-product-timer' ),
+                        'enable_sold_individually'  => esc_html__( 'Enable sold individually', 'woo-product-timer' ),
+                        'disable_sold_individually' => esc_html__( 'Disable sold individually', 'woo-product-timer' ),
+                    ];
+
+                    if ( isset( $labels[ $action_key ] ) ) {
+                        return $labels[ $action_key ];
+                    }
+
+                    if ( $action_key === 'set_regularprice' || $action_key === 'set_saleprice' ) {
+                        $prefix = $action_key === 'set_regularprice' ? esc_html__( 'Set regular price', 'woo-product-timer' ) : esc_html__( 'Set sale price', 'woo-product-timer' );
+                        $val    = isset( $action_val['value'] ) ? $action_val['value'] : '';
+                        $base   = ! empty( $action_val['base'] ) ? $action_val['base'] : 'fa';
+                        $unit   = ( $base === 'pr' || $base === 'ps' ) ? '%' : ' ' . get_woocommerce_currency_symbol();
+
+                        return $prefix . ': ' . $val . $unit;
+                    }
+
+                    return $action_key;
+                }
+
+                public static function format_apply_summary( $apply, $apply_val = [] ) {
+                    switch ( $apply ) {
+                        case 'apply_all':
+                            return esc_html__( 'All products', 'woo-product-timer' );
+                        case 'apply_variation':
+                            return esc_html__( 'Variations only', 'woo-product-timer' );
+                        case 'apply_not_variation':
+                            return esc_html__( 'Non-variation products', 'woo-product-timer' );
+                        case 'apply_product':
+                            $count = ! empty( $apply_val['products'] ) ? count( (array) $apply_val['products'] ) : 0;
+
+                            return sprintf( esc_html__( 'Selected products (%d)', 'woo-product-timer' ), $count );
+                        case 'apply_combination':
+                            return esc_html__( 'Combined conditions', 'woo-product-timer' );
+                        default:
+                            if ( strpos( $apply, 'apply_' ) === 0 ) {
+                                $tax      = substr( $apply, 6 );
+                                $tax_obj  = get_taxonomy( $tax );
+                                $tax_name = $tax_obj ? $tax_obj->labels->name : $tax;
+                                $terms    = ! empty( $apply_val['terms'] ) ? (array) $apply_val['terms'] : [];
+
+                                return $tax_name . ' (' . implode( ', ', array_slice( $terms, 0, 3 ) ) . ( count( $terms ) > 3 ? '...' : '' ) . ')';
+                            }
+
+                            return $apply;
+                    }
+                }
+
+                public static function format_timer_summary( $timer ) {
+                    if ( empty( $timer ) || ! is_array( $timer ) ) {
+                        return esc_html__( 'Always / No time conditions', 'woo-product-timer' );
+                    }
+
+                    $parts = [];
+                    foreach ( $timer as $time ) {
+                        $type = isset( $time['type'] ) ? $time['type'] : '';
+                        $val  = isset( $time['val'] ) ? $time['val'] : '';
+
+                        switch ( $type ) {
+                            case 'every_day':
+                                $parts[] = esc_html__( 'Everyday', 'woo-product-timer' );
+                                break;
+                            case 'date_even':
+                                $parts[] = esc_html__( 'All even dates', 'woo-product-timer' );
+                                break;
+                            case 'date_odd':
+                                $parts[] = esc_html__( 'All odd dates', 'woo-product-timer' );
+                                break;
+                            case 'week_even':
+                                $parts[] = esc_html__( 'All even weeks', 'woo-product-timer' );
+                                break;
+                            case 'week_odd':
+                                $parts[] = esc_html__( 'All odd weeks', 'woo-product-timer' );
+                                break;
+                            case 'week_no':
+                                $parts[] = sprintf( esc_html__( 'On week No. %s', 'woo-product-timer' ), $val );
+                                break;
+                            case 'monthly_every':
+                                $parts[] = sprintf( esc_html__( 'Monthly on day %s', 'woo-product-timer' ), $val );
+                                break;
+                            case 'month_no':
+                                $parts[] = sprintf( esc_html__( 'On month No. %s', 'woo-product-timer' ), $val );
+                                break;
+                            case 'date_on':
+                                $parts[] = sprintf( esc_html__( 'Date: %s', 'woo-product-timer' ), $val );
+                                break;
+                            case 'date_before':
+                                $parts[] = sprintf( esc_html__( 'Before date %s', 'woo-product-timer' ), $val );
+                                break;
+                            case 'date_after':
+                                $parts[] = sprintf( esc_html__( 'After date %s', 'woo-product-timer' ), $val );
+                                break;
+                            case 'date_multi':
+                                $parts[] = sprintf( esc_html__( 'Multiple dates: %s', 'woo-product-timer' ), $val );
+                                break;
+                            case 'date_range':
+                                $parts[] = sprintf( esc_html__( 'Date range: %s', 'woo-product-timer' ), $val );
+                                break;
+                            case 'date_time_before':
+                                $parts[] = sprintf( esc_html__( 'Before date & time %s', 'woo-product-timer' ), $val );
+                                break;
+                            case 'date_time_after':
+                                $parts[] = sprintf( esc_html__( 'After date & time %s', 'woo-product-timer' ), $val );
+                                break;
+                            case 'time_range':
+                                $parts[] = sprintf( esc_html__( 'Time range: %s', 'woo-product-timer' ), $val );
+                                break;
+                            case 'time_before':
+                                $parts[] = sprintf( esc_html__( 'Before time %s', 'woo-product-timer' ), $val );
+                                break;
+                            case 'time_after':
+                                $parts[] = sprintf( esc_html__( 'After time %s', 'woo-product-timer' ), $val );
+                                break;
+                            case 'weekly_every':
+                                $parts[] = sprintf( esc_html__( 'Weekly on every %s', 'woo-product-timer' ), ucfirst( $val ) );
+                                break;
+                            case 'days_less_published':
+                                $parts[] = sprintf( esc_html__( 'Days published < %s', 'woo-product-timer' ), $val );
+                                break;
+                            case 'days_greater_published':
+                                $parts[] = sprintf( esc_html__( 'Days published > %s', 'woo-product-timer' ), $val );
+                                break;
+                            default:
+                                $parts[] = $type . ( $val ? ( ': ' . $val ) : '' );
+                                break;
+                        }
+                    }
+
+                    return implode( ' | ', $parts );
+                }
+
+                public static function format_roles_summary( $roles ) {
+                    if ( empty( $roles ) || in_array( 'woopt_all', (array) $roles ) || in_array( 'all', (array) $roles ) ) {
+                        return esc_html__( 'All visitors', 'woo-product-timer' );
+                    }
+
+                    if ( is_string( $roles ) ) {
+                        $roles = explode( ',', $roles );
+                    }
+
+                    $parts = [];
+                    foreach ( (array) $roles as $r ) {
+                        if ( $r === 'woopt_guest' ) {
+                            $parts[] = esc_html__( 'Guest', 'woo-product-timer' );
+                        } elseif ( $r === 'woopt_user' ) {
+                            $parts[] = esc_html__( 'Logged-in user', 'woo-product-timer' );
+                        } else {
+                            $parts[] = ucfirst( $r );
+                        }
+                    }
+
+                    return implode( ', ', $parts );
+                }
+
             }
 
             return WPCleverWoopt::instance();
