@@ -514,13 +514,14 @@
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
-    border-radius: 11px 11px 0 0;
+    border-radius: 11px;
     height: auto;
     line-height: normal;
 }
 
 .woopt-settings-wrap .woopt_actions .woopt_action.active .woopt_action_heading {
     background-color: #f1f5f9;
+    border-radius: 11px 11px 0 0;
 }
 
 .woopt-settings-wrap .woopt_actions .woopt_action_heading:after {
